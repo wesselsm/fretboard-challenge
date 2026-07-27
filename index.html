@@ -116,8 +116,7 @@
         .fretboard {
             display: grid;
             grid-template-columns: repeat(16, minmax(42px, 1fr));
-            grid-template-rows: repeat(6, 48px);
-
+            grid-template-columns: repeat(16, 1fr);
             width: 100%;
             margin-bottom: 24px;
             overflow-x: auto;
@@ -164,8 +163,8 @@
 
         .fret {
             position: relative;
-            min-width: 42px;
-            height: 48px;
+            height: 34px;
+            min-width: 0;
 
             display: flex;
             align-items: center;
