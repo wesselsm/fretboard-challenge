@@ -1,1148 +1,176 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Pentatonic Fretboard Challenge 2.3</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-
-            background:
-                radial-gradient(circle at top, #30343b 0%, #17191d 55%, #0d0e10 100%);
-
-            color: #f5f5f5;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .app {
-            width: min(1100px, 100%);
-            margin: 0 auto;
-            padding: 24px;
-
-            background: rgba(25, 27, 31, 0.96);
-            border: 1px solid #3b3f46;
-            border-radius: 18px;
-
-            box-shadow:
-                0 18px 50px rgba(0, 0, 0, 0.45),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        }
-
-        h1 {
-            margin: 0 0 20px;
-            text-align: center;
-            font-size: clamp(24px, 4vw, 36px);
-            letter-spacing: 0.5px;
-        }
-        .scale-selector{
-            display:flex;
-            justify-content:center;
-            gap:10px;
-            margin-bottom:15px;
-        }
-
-        .scale-selector button{
-            min-height: 44px;
-            padding:10px 18px;
-            font-size:16px;
-            border-radius:8px;
-            cursor:pointer;
-        }
-        .scale-selector button.active-scale {
-            background: #daf2d0;
-            outline: 3px solid #ffd84d;
-            font-weight: bold;
-        }
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(145px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 0;
-            padding: 12px 14px;
-
-            background: #22252a;
-            border: 1px solid #3e434b;
-            border-radius: 12px;
-
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        }
-
-        .stat-icon {
-            flex: 0 0 auto;
-            font-size: 26px;
-            filter: grayscale(0.15);
-        }
-
-        .stat-text {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-
-        .stat-label {
-            color: #aeb4bc;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .stat-value small {
-            margin-left: 2px;
-            color: #9298a0;
-            font-size: 14px;
-        }
-
-        .fretboard {
-            display: grid;
-            grid-template-columns: repeat(16, minmax(0, 1fr));
-            grid-template-rows: repeat(6, clamp(30px, 4.5vw, 48px));
-
-            width: 100%;
-            margin-bottom: 24px;
-            overflow: hidden;
-
-            /* Donker palissanderhout met subtiele nerven */
-            background:
-                repeating-linear-gradient(
-                    91deg,
-                    transparent 0,
-                    rgba(255,255,255,0.025) 2px,
-                    transparent 4px,
-                    transparent 18px,
-                    rgba(0,0,0,0.12) 20px,
-                    transparent 23px
-                ),
-                repeating-linear-gradient(
-                    87deg,
-                    transparent 0,
-                    transparent 38px,
-                    rgba(0,0,0,0.18) 40px,
-                    transparent 43px,
-                    transparent 75px
-                ),
-                linear-gradient(
-                    90deg,
-                    #26140d 0%,
-                    #44271a 12%,
-                    #30180f 25%,
-                    #513020 39%,
-                    #2c160e 53%,
-                    #48291b 68%,
-                    #28140d 82%,
-                    #432519 100%
-                );
-
-            border: 4px solid #111;
-            border-radius: 10px;
-
-            box-shadow:
-                0 12px 25px rgba(0, 0, 0, 0.55),
-                inset 0 3px 5px rgba(255, 255, 255, 0.08),
-                inset 0 -5px 10px rgba(0, 0, 0, 0.55);
-        }
-
-        .fret {
-            position: relative;
-            min-width: 0;
-            height: 100%;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: transparent;
-            overflow: visible;
-
-            /* Metalen fret */
-            border-right: 3px solid #9da2a5;
-            border-bottom: none;
-
-            box-shadow:
-                inset -1px 0 0 rgba(255, 255, 255, 0.95),
-                inset -3px 0 1px rgba(0, 0, 0, 0.65);
-
-            font-size: 20px;
-            font-weight: bold;
-            color: #111;
-        }
-        .fret::before {
-            content: "";
-            position: absolute;
-
-            left: -3px;
-            right: -3px;
-            top: 50%;
-
-            height: 2px;
-
-            background:
-                linear-gradient(
-                    to bottom,
-                    #5c5c5c 0%,
-                    #f5f5f5 28%,
-                    #a5a5a5 55%,
-                    #4c4c4c 100%
-                );
-
-            box-shadow:
-                0 1px 1px rgba(0, 0, 0, 0.85),
-                0 -1px 1px rgba(255, 255, 255, 0.18);
-
-            transform: translateY(-50%);
-            z-index: 4;
-            pointer-events: none;
-        }  
-
-        .fret:last-child {
-            border-right-color: #9da2a5;
-        }
-
-        .fret.pink {
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(170, 52, 28, 0.55),
-                    rgba(85, 20, 10, 0.48)
-                );
-
-            box-shadow:
-                inset 0 1px 0 rgba(255, 190, 170, 0.12),
-                inset 0 -2px 5px rgba(0, 0, 0, 0.25),
-                inset -1px 0 0 rgba(255, 255, 255, 0.95),
-                inset -3px 0 1px rgba(0, 0, 0, 0.65);
-        }
-
-        .fret.green {
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(58, 145, 34, 0.55),
-                    rgba(18, 72, 10, 0.48)
-                );
-
-            box-shadow:
-                inset 0 1px 0 rgba(190, 255, 175, 0.12),
-                inset 0 -2px 5px rgba(0, 0, 0, 0.25),
-                inset -1px 0 0 rgba(255, 255, 255, 0.95),
-                inset -3px 0 1px rgba(0, 0, 0, 0.65);
-        }
-
-
-        .string5::before{
-            height:5px;
-        }
-
-        .string4::before{
-            height:4px;
-        }
-
-        .string3::before{
-            height:3px;
-        }
-
-        .string2::before{
-            height:2.5px;
-        }
-
-        .string1::before{
-            height:2px;
-        }
-
-        .string0::before{
-            height:1.5px;
-        }
-        .answers {
-            display: grid;
-            grid-template-columns: repeat(9, minmax(0, 1fr));
-            gap: 8px;
-        }
-        .fret.target {
-            outline: 4px solid #ffd84d;
-            outline-offset: -4px;
-            z-index: 2;
-        }
-
-        .fret.target::after {
-            content: "?";
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            width: 32px;
-            height: 32px;
-
-            border: 1px solid rgba(255,255,255,0.75);
-            border-radius: 50%;
-
-            background:
-                radial-gradient(
-                    circle at 30% 25%,
-                    #ffffff 0%,
-                    #ffe676 25%,
-                    #ffc400 62%,
-                    #a96c00 100%
-                );
-
-            color: black;
-            font-size: 22px;
-            font-weight: bold;
-
-            position: relative;
-            z-index: 6;
-
-            box-shadow:
-                0 3px 7px rgba(0,0,0,0.65),
-                inset 0 1px 1px rgba(255,255,255,0.8);
-        }
-        .answers button {
-            min-height: 58px;
-
-            background:
-                linear-gradient(180deg, #41464e, #2d3137);
-
-            color: white;
-
-            border: 1px solid #5c626c;
-            border-radius: 12px;
-
-            font-size: 22px;
-            font-weight: bold;
-            cursor: pointer;
-
-            box-shadow:
-                0 5px 10px rgba(0, 0, 0, 0.28),
-                inset 0 1px 0 rgba(255, 255, 255, 0.09);
-
-            transition:
-                transform 0.1s ease,
-                filter 0.1s ease,
-                box-shadow 0.1s ease;
-        }
-
-        .answers button:hover {
-            filter: brightness(1.15);
-            transform: translateY(-2px);
-        }
-
-        .answers button:active {
-            transform: translateY(1px);
-            box-shadow:
-                0 2px 5px rgba(0, 0, 0, 0.3),
-                inset 0 2px 5px rgba(0, 0, 0, 0.25);
-        }
-
-        .correct {
-            background: #238636;
-        }
-
-        .wrong {
-            background: #b62324;
-        }
-
-        [hidden] {
-            display: none !important;
-        }
-
-        .result-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 18px;
-            background: rgba(5, 6, 8, 0.78);
-            backdrop-filter: blur(6px);
-        }
-
-        .result-panel {
-            width: min(460px, 100%);
-            padding: 26px;
-            text-align: center;
-            background: linear-gradient(180deg, #292d33, #1b1e22);
-            border: 1px solid #4c525b;
-            border-radius: 18px;
-            box-shadow: 0 24px 65px rgba(0, 0, 0, 0.65);
-        }
-
-        .result-trophy {
-            font-size: 48px;
-            margin-bottom: 4px;
-        }
-
-        .result-panel h2 {
-            margin: 0 0 8px;
-            font-size: 28px;
-        }
-
-        .record-message {
-            min-height: 24px;
-            margin: 0 0 18px;
-            color: #ffd84d;
-            font-weight: bold;
-        }
-
-        .result-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 22px;
-        }
-
-        .result-item {
-            padding: 13px 8px;
-            background: #202328;
-            border: 1px solid #3d424a;
-            border-radius: 11px;
-        }
-
-        .result-item span {
-            display: block;
-            margin-bottom: 5px;
-            color: #aeb4bc;
-            font-size: 13px;
-        }
-
-        .result-item strong {
-            font-size: 20px;
-        }
-
-        .result-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .result-actions button {
-            min-height: 48px;
-            padding: 10px 14px;
-            border: 1px solid #d6ae22;
-            border-radius: 11px;
-            background: linear-gradient(180deg, #ffe273, #d4a400);
-            color: #171717;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .result-actions .secondary-button {
-            border-color: #59606a;
-            background: linear-gradient(180deg, #41464e, #2d3137);
-            color: #fff;
-        }
-
-        @media (max-width: 700px) {
-            body {
-                padding: 6px 6px calc(58px + env(safe-area-inset-bottom));
-            }
-
-            .app {
-                padding: 10px;
-                border-radius: 12px;
-            }
-
-            h1 {
-                margin-bottom: 10px;
-                font-size: clamp(21px, 6vw, 28px);
-            }
-
-            .scale-selector {
-                flex-wrap: nowrap;
-                gap: 5px;
-                margin-bottom: 9px;
-            }
-
-            .scale-selector button {
-                flex: 1 1 0;
-                min-width: 0;
-                min-height: 36px;
-                padding: 6px 4px;
-                font-size: clamp(11px, 3.3vw, 15px);
-            }
-
-            .dashboard {
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-                gap: 5px;
-                margin-bottom: 9px;
-            }
-
-            .stat-card {
-                display: block;
-                min-width: 0;
-                padding: 6px 3px;
-                text-align: center;
-                border-radius: 8px;
-            }
-
-            .stat-icon {
-                display: none;
-            }
-
-            .stat-text {
-                align-items: center;
-            }
-
-            .stat-label {
-                overflow: hidden;
-                max-width: 100%;
-                font-size: clamp(9px, 2.8vw, 12px);
-                text-overflow: ellipsis;
-            }
-
-            .stat-value {
-                font-size: clamp(15px, 4.5vw, 20px);
-            }
-
-            .stat-value small {
-                font-size: clamp(9px, 2.7vw, 12px);
-            }
-
-            .fretboard {
-                grid-template-columns: repeat(16, minmax(0, 1fr));
-                grid-template-rows: repeat(6, clamp(22px, 6.5vw, 28px));
-                margin-bottom: 6px;
-                border-width: 3px;
-                border-radius: 7px;
-            }
-
-            .fret {
-                border-right-width: 2px;
-            }
-
-            .fret::before {
-                left: -2px;
-                right: -2px;
-            }
-
-            .string5::before { height: 4px; }
-            .string4::before { height: 3.4px; }
-            .string3::before { height: 2.8px; }
-            .string2::before { height: 2.2px; }
-            .string1::before { height: 1.8px; }
-            .string0::before { height: 1.3px; }
-
-            .fret.target {
-                outline-width: 3px;
-                outline-offset: -3px;
-            }
-
-            .fret.target::after {
-                width: clamp(20px, 6vw, 25px);
-                height: clamp(20px, 6vw, 25px);
-                font-size: clamp(14px, 4.5vw, 18px);
-            }
-
-            .answers {
-                position: fixed;
-                left: 50%;
-                bottom: 0;
-                z-index: 90;
-
-                display: grid;
-                grid-template-columns: repeat(9, minmax(0, 1fr));
-
-                width: min(calc(100% - 12px), 1080px);
-                gap: 4px;
-                padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
-
-                background: rgba(25, 27, 31, 0.98);
-                border: 1px solid #3b3f46;
-                border-bottom: 0;
-                border-radius: 10px 10px 0 0;
-
-                box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.45);
-                transform: translateX(-50%);
-            }
-
-            .answers button {
-                width: 100%;
-                min-width: 0;
-                min-height: 39px;
-                padding: 3px 1px;
-                border-radius: 7px;
-                font-size: clamp(14px, 4.2vw, 18px);
-            }
-
-            .result-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-
-
-        /* Mobiele liggende stand: de schermbreedte is vaak groter dan 700 px,
-           daarom is hiervoor een aparte mediaquery nodig. */
-        @media (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
-            body {
-                padding: 4px 6px calc(50px + env(safe-area-inset-bottom));
-            }
-
-            .app {
-                padding: 6px 8px;
-                border-radius: 10px;
-            }
-
-            h1 {
-                margin-bottom: 5px;
-                font-size: clamp(17px, 3.3vw, 23px);
-                line-height: 1.05;
-            }
-
-            .scale-selector {
-                gap: 5px;
-                margin-bottom: 5px;
-            }
-
-            .scale-selector button {
-                flex: 1 1 0;
-                min-width: 0;
-                min-height: 28px;
-                padding: 3px 5px;
-                font-size: clamp(10px, 1.8vw, 13px);
-            }
-
-            .dashboard {
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-                gap: 4px;
-                margin-bottom: 5px;
-            }
-
-            .stat-card {
-                display: block;
-                min-width: 0;
-                padding: 3px 4px;
-                text-align: center;
-                border-radius: 7px;
-            }
-
-            .stat-icon {
-                display: none;
-            }
-
-            .stat-text {
-                align-items: center;
-            }
-
-            .stat-label {
-                font-size: 9px;
-            }
-
-            .stat-value {
-                font-size: clamp(13px, 2.5vw, 17px);
-            }
-
-            .stat-value small {
-                font-size: 9px;
-            }
-
-            .fretboard {
-                grid-template-columns: repeat(16, minmax(0, 1fr));
-                grid-template-rows: repeat(6, clamp(18px, 4.4vh, 23px));
-                margin-bottom: 4px;
-                border-width: 3px;
-                border-radius: 7px;
-            }
-
-            .fret {
-                border-right-width: 2px;
-            }
-
-            .fret::before {
-                left: -2px;
-                right: -2px;
-            }
-
-            .string5::before { height: 3.5px; }
-            .string4::before { height: 3px; }
-            .string3::before { height: 2.5px; }
-            .string2::before { height: 2px; }
-            .string1::before { height: 1.6px; }
-            .string0::before { height: 1.2px; }
-
-            .fret.target {
-                outline-width: 2px;
-                outline-offset: -2px;
-            }
-
-            .fret.target::after {
-                width: clamp(17px, 4.2vh, 22px);
-                height: clamp(17px, 4.2vh, 22px);
-                font-size: clamp(12px, 3.3vh, 16px);
-            }
-
-            .answers {
-                position: fixed;
-                left: 50%;
-                right: auto;
-                bottom: 0;
-                z-index: 90;
-
-                display: grid;
-                grid-template-columns: repeat(9, minmax(0, 1fr));
-
-                width: min(calc(100% - 12px), 1080px);
-                gap: 4px;
-                margin: 0;
-                padding: 5px 6px calc(5px + env(safe-area-inset-bottom));
-
-                background: rgba(25, 27, 31, 0.98);
-                border: 1px solid #3b3f46;
-                border-bottom: 0;
-                border-radius: 9px 9px 0 0;
-
-                box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.45);
-                transform: translateX(-50%);
-            }
-
-            .answers button {
-                width: 100%;
-                min-width: 0;
-                min-height: 32px;
-                padding: 2px 1px;
-                border-radius: 6px;
-                font-size: clamp(13px, 2.5vw, 16px);
-            }
-        }
-
-        @media (max-width: 400px) {
-            .answers {
-                gap: 3px;
-                padding-right: 4px;
-                padding-left: 4px;
-            }
-
-            .answers button {
-                min-height: 37px;
-                font-size: 15px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fretboard Trainer 3.0.0</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#0d0e10;--panel:#191b1f;--card:#22252a;--border:#3e434b;--muted:#aeb4bc;--accent:#ffd84d;--danger:#b62324;--good:#238636}
+body{margin:0;min-height:100vh;padding:18px;background:radial-gradient(circle at top,#30343b 0%,#17191d 55%,#0d0e10 100%);color:#f5f5f5;font-family:Arial,Helvetica,sans-serif}
+button,select,input{font:inherit}.app{width:min(1100px,100%);margin:auto;padding:20px;background:rgba(25,27,31,.97);border:1px solid #3b3f46;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04)}
+.app-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.brand h1{margin:0;font-size:clamp(24px,4vw,34px)}.version{color:var(--muted);font-size:12px}.manager-button,.secondary-button,.primary-button{min-height:40px;padding:8px 14px;border-radius:9px;cursor:pointer;font-weight:bold}.manager-button,.secondary-button{color:#fff;background:linear-gradient(180deg,#41464e,#2d3137);border:1px solid #5c626c}.primary-button{color:#171717;background:linear-gradient(180deg,#ffe273,#d4a400);border:1px solid #d6ae22}
+.scale-bar{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:12px}.scale-select-wrap{display:flex;align-items:center;gap:9px;padding:7px 10px;background:#22252a;border:1px solid #3e434b;border-radius:10px}.scale-select-wrap label{color:var(--muted);font-size:13px;white-space:nowrap}.scale-select{width:100%;min-width:0;padding:7px 9px;color:#fff;background:#17191d;border:1px solid #555b64;border-radius:7px}
+.dashboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:11px}.stat-card{display:flex;align-items:center;gap:10px;min-width:0;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:11px}.stat-icon{font-size:23px}.stat-text{display:flex;flex-direction:column;min-width:0}.stat-label{color:var(--muted);font-size:12px;white-space:nowrap}.stat-value{font-size:22px;font-weight:bold;white-space:nowrap}.stat-value small{color:#9298a0;font-size:12px}
+.scale-title{margin:0 0 8px;text-align:center;font-size:clamp(17px,3vw,23px);color:#e8eaed}
+.fretboard{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));grid-template-rows:repeat(6,clamp(28px,4.3vw,45px));width:100%;margin-bottom:14px;overflow:hidden;background:repeating-linear-gradient(91deg,transparent 0,rgba(255,255,255,.025) 2px,transparent 4px,transparent 18px,rgba(0,0,0,.12) 20px,transparent 23px),repeating-linear-gradient(87deg,transparent 0,transparent 38px,rgba(0,0,0,.18) 40px,transparent 43px,transparent 75px),linear-gradient(90deg,#26140d 0%,#44271a 12%,#30180f 25%,#513020 39%,#2c160e 53%,#48291b 68%,#28140d 82%,#432519 100%);border:4px solid #111;border-radius:10px;box-shadow:0 12px 25px rgba(0,0,0,.55),inset 0 3px 5px rgba(255,255,255,.08),inset 0 -5px 10px rgba(0,0,0,.55)}
+.fret{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;height:100%;overflow:visible;background:transparent;border-right:3px solid #9da2a5;box-shadow:inset -1px 0 rgba(255,255,255,.95),inset -3px 0 1px rgba(0,0,0,.65)}.fret::before{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:2px;z-index:4;pointer-events:none;transform:translateY(-50%);background:linear-gradient(to bottom,#5c5c5c 0%,#f5f5f5 28%,#a5a5a5 55%,#4c4c4c 100%);box-shadow:0 1px 1px rgba(0,0,0,.85),0 -1px 1px rgba(255,255,255,.18)}
+.fret.pink{background:linear-gradient(135deg,rgba(170,52,28,.55),rgba(85,20,10,.48));box-shadow:inset 0 1px rgba(255,190,170,.12),inset 0 -2px 5px rgba(0,0,0,.25),inset -1px 0 rgba(255,255,255,.95),inset -3px 0 1px rgba(0,0,0,.65)}.fret.green{background:linear-gradient(135deg,rgba(58,145,34,.55),rgba(18,72,10,.48));box-shadow:inset 0 1px rgba(190,255,175,.12),inset 0 -2px 5px rgba(0,0,0,.25),inset -1px 0 rgba(255,255,255,.95),inset -3px 0 1px rgba(0,0,0,.65)}
+.string5::before{height:5px}.string4::before{height:4px}.string3::before{height:3px}.string2::before{height:2.5px}.string1::before{height:2px}.string0::before{height:1.5px}.fret.target{outline:4px solid var(--accent);outline-offset:-4px;z-index:2}.fret.target::after{content:"?";position:relative;z-index:6;display:flex;align-items:center;justify-content:center;width:31px;height:31px;border:1px solid rgba(255,255,255,.75);border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff 0%,#ffe676 25%,#ffc400 62%,#a96c00 100%);color:#000;font-size:21px;font-weight:bold;box-shadow:0 3px 7px rgba(0,0,0,.65),inset 0 1px 1px rgba(255,255,255,.8)}
+.answers{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:7px}.answers button{min-width:0;min-height:48px;padding:5px 2px;color:#fff;background:linear-gradient(180deg,#41464e,#2d3137);border:1px solid #5c626c;border-radius:10px;font-size:20px;font-weight:bold;cursor:pointer;box-shadow:0 5px 10px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.09)}.answers button:active{transform:translateY(1px)}body.correct{background:#238636}body.wrong{background:#b62324}
+[hidden]{display:none!important}.modal{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;padding:15px;background:rgba(5,6,8,.8);backdrop-filter:blur(5px)}.modal-panel{width:min(720px,100%);max-height:min(86vh,780px);overflow:auto;padding:20px;background:linear-gradient(180deg,#292d33,#1b1e22);border:1px solid #4c525b;border-radius:16px;box-shadow:0 24px 65px rgba(0,0,0,.65)}.modal-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.modal-header h2{margin:0}.close-icon{width:40px;height:40px;color:#fff;background:#30343a;border:1px solid #59606a;border-radius:9px;cursor:pointer;font-size:22px}.manager-tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:14px}.search-input{width:100%;padding:10px 12px;color:#fff;background:#17191d;border:1px solid #555b64;border-radius:9px}.library-section h3{margin:16px 0 8px;font-size:15px;color:#dfe3e8}.scale-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.scale-card{display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px;background:#202328;border:1px solid #3d424a;border-radius:11px}.scale-card.active{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.scale-card h4{margin:0 0 4px;font-size:16px}.scale-meta{color:var(--muted);font-size:12px}.scale-card-actions{display:flex;flex-direction:column;gap:5px}.small-button{min-height:31px;padding:4px 8px;border-radius:7px;cursor:pointer;font-size:12px}.select-scale-button{color:#171717;background:#ffd84d;border:1px solid #d6ae22}.reset-score-button{color:#fff;background:#343941;border:1px solid #5b626c}.empty-state{padding:16px;text-align:center;color:var(--muted);background:#202328;border:1px dashed #50565f;border-radius:11px}.result-panel{width:min(460px,100%);text-align:center}.result-panel h2{margin:0 0 8px}.record-message{min-height:22px;color:var(--accent);font-weight:bold}.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0}.result-item{padding:11px 6px;background:#202328;border:1px solid #3d424a;border-radius:10px}.result-item span{display:block;color:var(--muted);font-size:12px}.result-item strong{font-size:19px}.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:700px){body{padding:5px 5px calc(55px + env(safe-area-inset-bottom))}.app{padding:9px;border-radius:11px}.app-header{margin-bottom:7px}.brand h1{font-size:21px}.version{font-size:10px}.manager-button{min-height:33px;padding:5px 8px;font-size:12px}.scale-bar{margin-bottom:7px}.scale-select-wrap{padding:4px 6px}.scale-select-wrap label{display:none}.scale-select{padding:5px;font-size:13px}.dashboard{gap:4px;margin-bottom:7px}.stat-card{display:block;padding:5px 2px;text-align:center;border-radius:7px}.stat-icon{display:none}.stat-text{align-items:center}.stat-label{font-size:clamp(8px,2.7vw,11px)}.stat-value{font-size:clamp(14px,4.4vw,19px)}.stat-value small{font-size:9px}.scale-title{margin-bottom:5px;font-size:15px}.fretboard{grid-template-rows:repeat(6,clamp(20px,6vw,26px));margin-bottom:5px;border-width:3px;border-radius:7px}.fret{border-right-width:2px}.fret::before{left:-2px;right:-2px}.string5::before{height:4px}.string4::before{height:3.4px}.string3::before{height:2.8px}.string2::before{height:2.2px}.string1::before{height:1.8px}.string0::before{height:1.3px}.fret.target{outline-width:3px;outline-offset:-3px}.fret.target::after{width:clamp(19px,5.7vw,24px);height:clamp(19px,5.7vw,24px);font-size:clamp(13px,4.2vw,17px)}.answers{position:fixed;left:50%;bottom:0;z-index:90;width:min(calc(100% - 10px),1090px);gap:3px;padding:5px 5px calc(5px + env(safe-area-inset-bottom));background:rgba(25,27,31,.98);border:1px solid #3b3f46;border-bottom:0;border-radius:9px 9px 0 0;box-shadow:0 -7px 18px rgba(0,0,0,.45);transform:translateX(-50%)}.answers button{min-height:37px;padding:2px 0;border-radius:6px;font-size:clamp(13px,4vw,17px)}.scale-list{grid-template-columns:1fr}.manager-tools{grid-template-columns:1fr}.result-grid{grid-template-columns:1fr}}
+@media(orientation:landscape) and (max-height:600px) and (pointer:coarse){body{padding:3px 5px calc(47px + env(safe-area-inset-bottom))}.app{padding:5px 7px}.app-header{margin-bottom:4px}.brand h1{font-size:17px}.version{display:none}.manager-button{min-height:28px;padding:3px 7px;font-size:11px}.scale-bar{margin-bottom:4px}.scale-select-wrap{padding:2px 5px}.scale-select{padding:3px;font-size:11px}.dashboard{gap:4px;margin-bottom:4px}.stat-card{padding:3px 2px}.stat-label{font-size:8px}.stat-value{font-size:14px}.scale-title{margin-bottom:3px;font-size:12px}.fretboard{grid-template-rows:repeat(6,clamp(17px,4.2vh,22px));margin-bottom:3px}.fret.target::after{width:18px;height:18px;font-size:12px}.answers{width:min(calc(100% - 10px),1090px);padding:4px 5px calc(4px + env(safe-area-inset-bottom))}.answers button{min-height:30px;font-size:13px}.modal-panel{max-height:92vh;padding:12px}}
+</style>
 </head>
-
 <body>
-
 <div class="app">
-    <h1 id="title">Blues Scale Challenge</h1>
-
-    <div class="scale-selector">
-        <button data-scale="minor">Minor Pentatonic</button>
-        <button data-scale="major">Major Pentatonic</button>
-        <button data-scale="blues">Blues Scale</button>
-    </div>
-    <div class="dashboard" aria-label="Spelstatistieken">
-        <div class="stat-card">
-            <span class="stat-icon" aria-hidden="true">🎯</span>
-            <span class="stat-text">
-                <span class="stat-label">Score</span>
-                <span class="stat-value"><strong id="score">0</strong></span>
-            </span>
-        </div>
-
-        <div class="stat-card">
-            <span class="stat-icon" aria-hidden="true">🏆</span>
-            <span class="stat-text">
-                <span class="stat-label">High score</span>
-                <span class="stat-value"><strong id="highScore">0</strong></span>
-            </span>
-        </div>
-
-        <div class="stat-card">
-            <span class="stat-icon" aria-hidden="true">🔢</span>
-            <span class="stat-text">
-                <span class="stat-label">Vraag</span>
-                <span class="stat-value">
-                    <strong id="question">0</strong><small>/30</small>
-                </span>
-            </span>
-        </div>
-
-        <div class="stat-card">
-            <span class="stat-icon" aria-hidden="true">⏱️</span>
-            <span class="stat-text">
-                <span class="stat-label">Tijd</span>
-                <span class="stat-value"><strong id="timer">00:00</strong></span>
-            </span>
-        </div>
-    </div>
-
-    <div id="fretboard" class="fretboard"></div>
-
-    <div class="answers">
-        <button data-answer="1">1</button>
-        <button data-answer="2">2</button>
-        <button data-answer="b3">b3</button>
-        <button data-answer="3">3</button>
-        <button data-answer="4">4</button>
-        <button data-answer="b5">b5</button>
-        <button data-answer="5">5</button>
-        <button data-answer="6">6</button>
-        <button data-answer="7">7</button>
-        
-    </div>
-
-    <div id="resultModal" class="result-modal" hidden>
-        <div class="result-panel" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
-            <div class="result-trophy" aria-hidden="true">🏆</div>
-            <h2 id="resultTitle">Ronde voltooid</h2>
-            <p id="recordMessage" class="record-message"></p>
-
-            <div class="result-grid">
-                <div class="result-item">
-                    <span>Score</span>
-                    <strong id="resultScore">0 / 30</strong>
-                </div>
-                <div class="result-item">
-                    <span>Tijd</span>
-                    <strong id="resultTime">00:00</strong>
-                </div>
-                <div class="result-item">
-                    <span>High score</span>
-                    <strong id="resultHighScore">0 / 30</strong>
-                </div>
-            </div>
-
-            <div class="result-actions">
-                <button id="playAgainButton" type="button">Nog een ronde</button>
-                <button id="closeResultButton" type="button" class="secondary-button">Sluiten</button>
-            </div>
-        </div>
-    </div>
+  <header class="app-header">
+    <div class="brand"><h1>Fretboard Trainer</h1><div class="version">Versie 3.0.0 · nieuwe architectuur</div></div>
+    <button id="openManagerButton" class="manager-button" type="button">☰ Schalenbibliotheek</button>
+  </header>
+  <div class="scale-bar">
+    <div class="scale-select-wrap"><label for="scaleSelect">Actieve schaal</label><select id="scaleSelect" class="scale-select"></select></div>
+    <button id="restartButton" class="secondary-button" type="button">↻ Nieuwe ronde</button>
+  </div>
+  <div class="dashboard" aria-label="Spelstatistieken">
+    <div class="stat-card"><span class="stat-icon">🎯</span><span class="stat-text"><span class="stat-label">Score</span><span class="stat-value" id="score">0</span></span></div>
+    <div class="stat-card"><span class="stat-icon">🏆</span><span class="stat-text"><span class="stat-label">High score</span><span class="stat-value" id="highScore">0</span></span></div>
+    <div class="stat-card"><span class="stat-icon">🔢</span><span class="stat-text"><span class="stat-label">Vraag</span><span class="stat-value"><span id="question">0</span><small>/30</small></span></span></div>
+    <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-text"><span class="stat-label">Tijd</span><span class="stat-value" id="timer">00:00</span></span></div>
+  </div>
+  <h2 id="scaleTitle" class="scale-title"></h2>
+  <div id="fretboard" class="fretboard" aria-label="Gitaarfretboard"></div>
+  <div class="answers" aria-label="Antwoorden">
+    <button data-answer="1">1</button><button data-answer="2">2</button><button data-answer="b3">b3</button><button data-answer="3">3</button><button data-answer="4">4</button><button data-answer="b5">b5</button><button data-answer="5">5</button><button data-answer="6">6</button><button data-answer="7">7</button>
+  </div>
 </div>
 
-    <script>
-        const minorPattern = [
-            ["p1", "", "p7", "", "", "g5", "", "g4", "", "gb3", "", "", "p1", "", "p7", ""],
-            ["p5", "", "p4", "", "pb3", "", "", "g1", "", "g7", "", "", "p5", "", "p4", ""],
-            ["gb3", "", "", "p1", "", "p7", "", "", "g5", "", "g4", "", "gb3", "", "", "p1"],
-            ["g7", "", "", "p5", "", "p4", "", "pb3", "", "", "g1", "", "g7", "", "", "p5"],
-            ["g4", "", "gb3", "", "", "p1", "", "p7", "", "", "g5", "", "g4", "", "gb3", ""],
-            ["g1", "", "g7", "", "", "p5", "", "p4", "", "pb3", "", "", "g1", "", "g7", ""]
-        ]
-        const majorPattern = [
-            ["p6", "", "p5", "", "", "g3", "", "g2", "", "g1", "", "", "p6", "", "p5", ""],
-            ["p3", "", "p2", "", "p1", "", "", "g6", "", "g5", "", "", "p3", "", "p2", ""],
-            ["g1", "", "", "p6", "", "p5", "", "", "g3", "", "g2", "", "g1", "", "", "p6"],
-            ["g1", "", "", "p3", "", "p2", "", "p1", "", "", "g6", "", "g5", "", "", "p3"],
-            ["g2", "", "g1", "", "", "p6", "", "p5", "", "", "g3", "", "g2", "", "g1", ""],
-            ["g6", "", "g5", "", "", "p3", "", "p2", "", "p1", "", "", "g6", "", "g5", ""]
-        ]
-        const bluesPattern = [
-            ["p1", "", "p7", "", "", "g5", "gb5", "g4", "", "gb3", "", "", "p1", "", "p7", ""],
-            ["p5", "pb5", "p4", "", "pb3", "", "", "g1", "", "g7", "", "", "p5", "pb5", "p4", ""],
-            ["gb3", "", "", "p1", "", "p7", "", "", "g5", "gb5", "g4", "", "gb3", "", "", "p1"],
-            ["g7", "", "", "p5", "pb5", "p4", "", "pb3", "", "", "g1", "", "g7", "", "", "p5"],
-            ["g4", "", "gb3", "", "", "p1", "", "p7", "", "", "g5", "gb5", "g4", "", "gb3", ""],
-            ["g1", "", "g7", "", "", "p5", "pb5", "p4", "", "pb3", "", "", "g1", "", "g7", ""]
-        ];
-        const scales = {
-            minor: {
-                title: "Minor Pentatonic Challenge",
-                pattern: minorPattern
-            },
+<div id="managerModal" class="modal" hidden>
+  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="managerTitle">
+    <header class="modal-header"><div><h2 id="managerTitle">Schalenbibliotheek</h2><div class="version">Kies en beheer de beschikbare oefenpatronen</div></div><button id="closeManagerButton" class="close-icon" type="button" aria-label="Sluiten">×</button></header>
+    <div class="manager-tools"><input id="scaleSearch" class="search-input" type="search" placeholder="Zoek een schaal…"><button id="clearSearchButton" class="secondary-button" type="button">Wissen</button></div>
+    <div class="library-section"><h3>STANDAARDSCHALEN</h3><div id="builtInScaleList" class="scale-list"></div></div>
+    <div class="library-section"><h3>MIJN SCHALEN</h3><div class="empty-state">Nog geen eigen patronen. De Custom Scale Editor volgt in versie 3.1.0.</div></div>
+  </section>
+</div>
 
-            major: {
-                title: "Major Pentatonic Challenge",
-                pattern: majorPattern
-            },
+<div id="resultModal" class="modal" hidden>
+  <section class="modal-panel result-panel" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+    <div style="font-size:44px">🏆</div><h2 id="resultTitle">Ronde voltooid</h2><p id="recordMessage" class="record-message"></p>
+    <div class="result-grid"><div class="result-item"><span>Score</span><strong id="resultScore">0 / 30</strong></div><div class="result-item"><span>Tijd</span><strong id="resultTime">00:00</strong></div><div class="result-item"><span>High score</span><strong id="resultHighScore">0 / 30</strong></div></div>
+    <div class="result-actions"><button id="playAgainButton" class="primary-button" type="button">Nog een ronde</button><button id="closeResultButton" class="secondary-button" type="button">Sluiten</button></div>
+  </section>
+</div>
 
-            blues: {
-                title: "Blues Scale Challenge",
-                pattern: bluesPattern
-            }
-        };
-        const TOTAL_QUESTIONS = 30;
-        const STORAGE_PREFIX = "fretboardChallengeHighScore_";
+<script>
+'use strict';
 
-        let currentScale = "blues";
-        let fretboardPattern = scales[currentScale].pattern;
-        let positions = [];
-        let score = 0;
-        let questionNumber = 0;
-        let currentPosition = null;
-        let acceptingAnswer = false;
-        let gameActive = false;
-        let startTime = 0;
-        let elapsedMilliseconds = 0;
-        let timerInterval = null;
+/* =========================
+   1. DATA / SCALE REPOSITORY
+   ========================= */
+const ScaleRepository = (() => {
+  const scales = [
+    {id:'minor-pentatonic',name:'Minor Pentatonic',subtitle:'Minor Pentatonic Challenge',category:'standard',pattern:[
+      ['p1','','p7','','','g5','','g4','','gb3','','','p1','','p7',''],['p5','','p4','','pb3','','','g1','','g7','','','p5','','p4',''],['gb3','','','p1','','p7','','','g5','','g4','','gb3','','','p1'],['g7','','','p5','','p4','','pb3','','','g1','','g7','','','p5'],['g4','','gb3','','','p1','','p7','','','g5','','g4','','gb3',''],['g1','','g7','','','p5','','p4','','pb3','','','g1','','g7','']
+    ]},
+    {id:'major-pentatonic',name:'Major Pentatonic',subtitle:'Major Pentatonic Challenge',category:'standard',pattern:[
+      ['p6','','p5','','','g3','','g2','','g1','','','p6','','p5',''],['p3','','p2','','p1','','','g6','','g5','','','p3','','p2',''],['g1','','','p6','','p5','','','g3','','g2','','g1','','','p6'],['g1','','','p3','','p2','','p1','','','g6','','g5','','','p3'],['g2','','g1','','','p6','','p5','','','g3','','g2','','g1',''],['g6','','g5','','','p3','','p2','','p1','','','g6','','g5','']
+    ]},
+    {id:'blues',name:'Blues Scale',subtitle:'Blues Scale Challenge',category:'standard',pattern:[
+      ['p1','','p7','','','g5','gb5','g4','','gb3','','','p1','','p7',''],['p5','pb5','p4','','pb3','','','g1','','g7','','','p5','pb5','p4',''],['gb3','','','p1','','p7','','','g5','gb5','g4','','gb3','','','p1'],['g7','','','p5','pb5','p4','','pb3','','','g1','','g7','','','p5'],['g4','','gb3','','','p1','','p7','','','g5','gb5','g4','','gb3',''],['g1','','g7','','','p5','pb5','p4','','pb3','','','g1','','g7','']
+    ]}
+  ];
+  const clone = value => JSON.parse(JSON.stringify(value));
+  return {
+    getAll: () => clone(scales),
+    getById: id => clone(scales.find(scale => scale.id === id) || scales[2]),
+    countNotes: scale => scale.pattern.flat().filter(Boolean).length
+  };
+})();
 
-        const fretboard = document.getElementById("fretboard");
-        const scoreDisplay = document.getElementById("score");
-        const highScoreDisplay = document.getElementById("highScore");
-        const questionDisplay = document.getElementById("question");
-        const timerDisplay = document.getElementById("timer");
-        const resultModal = document.getElementById("resultModal");
-        const resultScore = document.getElementById("resultScore");
-        const resultTime = document.getElementById("resultTime");
-        const resultHighScore = document.getElementById("resultHighScore");
-        const recordMessage = document.getElementById("recordMessage");
+/* =========================
+   2. PERSISTENT STORAGE
+   ========================= */
+const StorageService = (() => {
+  const KEYS={currentScale:'fretboardTrainer_currentScale',highScores:'fretboardTrainer_highScores'};
+  const readObject=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}};
+  return {
+    getCurrentScale:()=>localStorage.getItem(KEYS.currentScale)||'blues',
+    setCurrentScale:id=>localStorage.setItem(KEYS.currentScale,id),
+    getHighScore:id=>Number(readObject(KEYS.highScores,{})[id]||0),
+    setHighScore:(id,value)=>{const all=readObject(KEYS.highScores,{});all[id]=value;localStorage.setItem(KEYS.highScores,JSON.stringify(all));},
+    resetHighScore:id=>{const all=readObject(KEYS.highScores,{});delete all[id];localStorage.setItem(KEYS.highScores,JSON.stringify(all));}
+  };
+})();
 
-        function getPlayablePositions() {
-            const playablePositions = [];
+/* =========================
+   3. TIMER SERVICE
+   ========================= */
+const TimerService = (() => {
+  let startedAt=0,elapsed=0,interval=null,onTick=()=>{};
+  const format=ms=>{const s=Math.floor(ms/1000);return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`};
+  const current=()=>startedAt?elapsed+(performance.now()-startedAt):elapsed;
+  return {
+    configure:callback=>{onTick=callback},
+    start:()=>{clearInterval(interval);elapsed=0;startedAt=performance.now();onTick(format(0));interval=setInterval(()=>onTick(format(current())),250)},
+    stop:()=>{if(startedAt){elapsed=current();startedAt=0}clearInterval(interval);interval=null;onTick(format(elapsed));return elapsed},
+    reset:()=>{clearInterval(interval);interval=null;startedAt=0;elapsed=0;onTick(format(0))},
+    formatted:()=>format(current())
+  };
+})();
 
-            fretboardPattern.forEach((row, stringIndex) => {
-                row.forEach((cellCode, fretIndex) => {
-                    if (cellCode !== "") {
-                        playablePositions.push({
-                            string: stringIndex,
-                            fret: fretIndex,
-                            color: cellCode.charAt(0),
-                            answer: cellCode.substring(1)
-                        });
-                    }
-                });
-            });
+/* =========================
+   4. FRETBOARD VIEW
+   ========================= */
+const FretboardView = (() => {
+  const element=document.getElementById('fretboard');
+  function render(pattern){element.innerHTML='';pattern.forEach((row,stringIndex)=>row.forEach((code,fretIndex)=>{const cell=document.createElement('div');cell.className=`fret string${stringIndex}`;if(code){cell.classList.add(code[0]==='p'?'pink':'green')}cell.dataset.string=stringIndex;cell.dataset.fret=fretIndex;element.appendChild(cell)}));}
+  function clearTarget(){element.querySelectorAll('.target').forEach(cell=>cell.classList.remove('target'));}
+  function showTarget(position){clearTarget();element.querySelector(`[data-string="${position.string}"][data-fret="${position.fret}"]`)?.classList.add('target');}
+  return {render,clearTarget,showTarget};
+})();
 
-            return playablePositions;
-        }
+/* =========================
+   5. GAME ENGINE
+   ========================= */
+const GameEngine = (() => {
+  const TOTAL=30;let scale=null,positions=[],score=0,question=0,current=null,accepting=false,active=false;
+  const listeners={update:()=>{},finish:()=>{}};
+  function playable(pattern){const result=[];pattern.forEach((row,string)=>row.forEach((code,fret)=>{if(code)result.push({string,fret,color:code[0],answer:code.slice(1)})}));return result;}
+  function next(){if(question>=TOTAL){finish();return}current=positions[Math.floor(Math.random()*positions.length)];question++;accepting=true;FretboardView.showTarget(current);listeners.update({score,question,total:TOTAL});}
+  function finish(){active=false;accepting=false;const elapsed=TimerService.stop();FretboardView.clearTarget();listeners.finish({score,total:TOTAL,elapsed,time:TimerService.formatted(),scaleId:scale.id});}
+  function start(newScale){scale=newScale;positions=playable(scale.pattern);score=0;question=0;current=null;accepting=false;active=true;FretboardView.render(scale.pattern);TimerService.start();listeners.update({score,question,total:TOTAL});next();}
+  function answer(value){if(!active||!accepting||!current)return;accepting=false;const correct=value.toLowerCase()===current.answer.toLowerCase();if(correct)score++;document.body.classList.add(correct?'correct':'wrong');listeners.update({score,question,total:TOTAL});setTimeout(()=>{document.body.classList.remove('correct','wrong');next()},250);}
+  return {start,answer,onUpdate:fn=>listeners.update=fn,onFinish:fn=>listeners.finish=fn};
+})();
 
-        function getHighScore(scaleName) {
-            try {
-                const savedValue = localStorage.getItem(STORAGE_PREFIX + scaleName);
-                const parsedValue = Number.parseInt(savedValue ?? "0", 10);
-                return Number.isFinite(parsedValue) ? parsedValue : 0;
-            } catch (error) {
-                console.warn("High score kon niet worden gelezen:", error);
-                return 0;
-            }
-        }
+/* =========================
+   6. SCALE MANAGER UI
+   ========================= */
+const ScaleManager = (() => {
+  const modal=document.getElementById('managerModal'),list=document.getElementById('builtInScaleList'),search=document.getElementById('scaleSearch');let onSelect=()=>{},activeId='';
+  function render(){const term=search.value.trim().toLowerCase();const scales=ScaleRepository.getAll().filter(scale=>scale.name.toLowerCase().includes(term));list.innerHTML='';scales.forEach(scale=>{const card=document.createElement('article');card.className=`scale-card${scale.id===activeId?' active':''}`;const notes=ScaleRepository.countNotes(scale);card.innerHTML=`<div><h4>${scale.name}</h4><div class="scale-meta">${notes} speelbare posities · high score ${StorageService.getHighScore(scale.id)}/30</div></div><div class="scale-card-actions"><button class="small-button select-scale-button" type="button">Kiezen</button><button class="small-button reset-score-button" type="button">Score wissen</button></div>`;card.querySelector('.select-scale-button').addEventListener('click',()=>{onSelect(scale.id);close()});card.querySelector('.reset-score-button').addEventListener('click',()=>{if(confirm(`High score van ${scale.name} wissen?`)){StorageService.resetHighScore(scale.id);render();UIController.refreshHighScore();}});list.appendChild(card)});if(!scales.length)list.innerHTML='<div class="empty-state">Geen schaal gevonden.</div>';}
+  function open(currentId){activeId=currentId;search.value='';render();modal.hidden=false;search.focus();}
+  function close(){modal.hidden=true;}
+  search.addEventListener('input',render);document.getElementById('clearSearchButton').addEventListener('click',()=>{search.value='';render();search.focus()});document.getElementById('closeManagerButton').addEventListener('click',close);modal.addEventListener('click',event=>{if(event.target===modal)close()});
+  return {open,close,onSelect:fn=>onSelect=fn};
+})();
 
-        function saveHighScore(scaleName, value) {
-            try {
-                localStorage.setItem(STORAGE_PREFIX + scaleName, String(value));
-            } catch (error) {
-                console.warn("High score kon niet worden opgeslagen:", error);
-            }
-        }
+/* =========================
+   7. APPLICATION CONTROLLER
+   ========================= */
+const UIController = (() => {
+  const els={select:document.getElementById('scaleSelect'),title:document.getElementById('scaleTitle'),score:document.getElementById('score'),high:document.getElementById('highScore'),question:document.getElementById('question'),timer:document.getElementById('timer'),resultModal:document.getElementById('resultModal'),resultScore:document.getElementById('resultScore'),resultTime:document.getElementById('resultTime'),resultHigh:document.getElementById('resultHighScore'),record:document.getElementById('recordMessage')};let currentScale=null;
+  function populateSelect(){els.select.innerHTML='<optgroup label="Standaardschalen"></optgroup>';const group=els.select.querySelector('optgroup');ScaleRepository.getAll().forEach(scale=>{const option=document.createElement('option');option.value=scale.id;option.textContent=scale.name;group.appendChild(option)});}
+  function selectScale(id){currentScale=ScaleRepository.getById(id);StorageService.setCurrentScale(currentScale.id);els.select.value=currentScale.id;els.title.textContent=currentScale.subtitle;refreshHighScore();els.resultModal.hidden=true;GameEngine.start(currentScale);}
+  function refreshHighScore(){if(currentScale)els.high.textContent=StorageService.getHighScore(currentScale.id);}
+  function handleFinish(result){const oldHigh=StorageService.getHighScore(result.scaleId);const isRecord=result.score>oldHigh;if(isRecord)StorageService.setHighScore(result.scaleId,result.score);const high=Math.max(oldHigh,result.score);els.high.textContent=high;els.resultScore.textContent=`${result.score} / ${result.total}`;els.resultTime.textContent=result.time;els.resultHigh.textContent=`${high} / ${result.total}`;els.record.textContent=isRecord?'Nieuwe high score!':'';els.resultModal.hidden=false;}
+  function init(){populateSelect();TimerService.configure(value=>els.timer.textContent=value);GameEngine.onUpdate(state=>{els.score.textContent=state.score;els.question.textContent=state.question});GameEngine.onFinish(handleFinish);ScaleManager.onSelect(selectScale);els.select.addEventListener('change',()=>selectScale(els.select.value));document.getElementById('restartButton').addEventListener('click',()=>selectScale(currentScale.id));document.getElementById('openManagerButton').addEventListener('click',()=>ScaleManager.open(currentScale.id));document.querySelectorAll('[data-answer]').forEach(button=>button.addEventListener('click',()=>GameEngine.answer(button.dataset.answer)));document.getElementById('playAgainButton').addEventListener('click',()=>selectScale(currentScale.id));document.getElementById('closeResultButton').addEventListener('click',()=>els.resultModal.hidden=true);els.resultModal.addEventListener('click',event=>{if(event.target===els.resultModal)els.resultModal.hidden=true});selectScale(StorageService.getCurrentScale());}
+  return {init,refreshHighScore};
+})();
 
-        function formatTime(milliseconds) {
-            const totalSeconds = Math.floor(milliseconds / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-        }
-
-        function updateTimer() {
-            if (gameActive) {
-                elapsedMilliseconds = Date.now() - startTime;
-            }
-            timerDisplay.textContent = formatTime(elapsedMilliseconds);
-        }
-
-        function startTimer() {
-            stopTimer();
-            elapsedMilliseconds = 0;
-            startTime = Date.now();
-            gameActive = true;
-            updateTimer();
-            timerInterval = window.setInterval(updateTimer, 250);
-        }
-
-        function stopTimer() {
-            if (timerInterval !== null) {
-                window.clearInterval(timerInterval);
-                timerInterval = null;
-            }
-            if (gameActive && startTime) {
-                elapsedMilliseconds = Date.now() - startTime;
-            }
-            gameActive = false;
-            updateTimer();
-        }
-
-        function selectScale(scaleName) {
-            if (!scales[scaleName]) {
-                console.error("Onbekende toonladder:", scaleName);
-                return;
-            }
-
-            resultModal.hidden = true;
-            currentScale = scaleName;
-            fretboardPattern = scales[scaleName].pattern;
-            score = 0;
-            questionNumber = 0;
-            currentPosition = null;
-            acceptingAnswer = false;
-
-            scoreDisplay.textContent = "0";
-            questionDisplay.textContent = "0";
-            highScoreDisplay.textContent = getHighScore(scaleName);
-            timerDisplay.textContent = "00:00";
-
-            document.getElementById("title").textContent = scales[scaleName].title;
-            document.body.classList.remove("correct", "wrong");
-
-            createFretboard();
-            positions = getPlayablePositions();
-
-            if (positions.length === 0) {
-                console.error("Het gekozen patroon bevat geen speelbare posities.");
-                return;
-            }
-
-            updateScaleButtons(scaleName);
-            startTimer();
-            nextQuestion();
-        }
-
-        function createFretboard() {
-            fretboard.innerHTML = "";
-
-            fretboardPattern.forEach((row, stringIndex) => {
-                row.forEach((cellCode, fretIndex) => {
-                    const cell = document.createElement("div");
-                    cell.classList.add("fret", "string" + stringIndex);
-
-                    if (cellCode !== "") {
-                        const colorCode = cellCode.charAt(0);
-                        if (colorCode === "p") cell.classList.add("pink");
-                        if (colorCode === "g") cell.classList.add("green");
-                    }
-
-                    cell.dataset.string = stringIndex;
-                    cell.dataset.fret = fretIndex;
-                    fretboard.appendChild(cell);
-                });
-            });
-        }
-
-        function clearTarget() {
-            document.querySelectorAll(".target").forEach(cell => {
-                cell.classList.remove("target");
-            });
-        }
-
-        function updateScaleButtons(activeScale) {
-            document.querySelectorAll("[data-scale]").forEach(button => {
-                button.classList.toggle(
-                    "active-scale",
-                    button.dataset.scale === activeScale
-                );
-            });
-        }
-
-        function nextQuestion() {
-            if (questionNumber >= TOTAL_QUESTIONS) {
-                finishGame();
-                return;
-            }
-
-            clearTarget();
-            const randomIndex = Math.floor(Math.random() * positions.length);
-            currentPosition = positions[randomIndex];
-
-            const selector =
-                `[data-string="${currentPosition.string}"]` +
-                `[data-fret="${currentPosition.fret}"]`;
-
-            const targetCell = document.querySelector(selector);
-            if (!targetCell) {
-                console.error("Doelvak kon niet worden gevonden.");
-                return;
-            }
-
-            targetCell.classList.add("target");
-            questionNumber++;
-            questionDisplay.textContent = questionNumber;
-            acceptingAnswer = true;
-        }
-
-        function checkAnswer(answer) {
-            if (!currentPosition || !acceptingAnswer || !gameActive) return;
-            acceptingAnswer = false;
-
-            const isCorrect =
-                answer.toLowerCase() === currentPosition.answer.toLowerCase();
-
-            if (isCorrect) {
-                score++;
-                scoreDisplay.textContent = score;
-                document.body.classList.add("correct");
-            } else {
-                document.body.classList.add("wrong");
-            }
-
-            window.setTimeout(() => {
-                document.body.classList.remove("correct", "wrong");
-                nextQuestion();
-            }, 250);
-        }
-
-        function finishGame() {
-            acceptingAnswer = false;
-            currentPosition = null;
-            clearTarget();
-            stopTimer();
-
-            const previousHighScore = getHighScore(currentScale);
-            const isNewHighScore = score > previousHighScore;
-            const finalHighScore = Math.max(score, previousHighScore);
-
-            if (isNewHighScore) {
-                saveHighScore(currentScale, finalHighScore);
-            }
-
-            highScoreDisplay.textContent = finalHighScore;
-            resultScore.textContent = `${score} / ${TOTAL_QUESTIONS}`;
-            resultTime.textContent = formatTime(elapsedMilliseconds);
-            resultHighScore.textContent = `${finalHighScore} / ${TOTAL_QUESTIONS}`;
-            recordMessage.textContent = isNewHighScore
-                ? "Nieuwe high score!"
-                : score === TOTAL_QUESTIONS
-                    ? "Perfecte score!"
-                    : "Goed gespeeld!";
-
-            resultModal.hidden = false;
-        }
-
-        document.querySelectorAll("button[data-answer]").forEach(button => {
-            button.addEventListener("click", () => {
-                checkAnswer(button.dataset.answer);
-            });
-        });
-
-        document.querySelectorAll("[data-scale]").forEach(button => {
-            button.addEventListener("click", () => {
-                selectScale(button.dataset.scale);
-            });
-        });
-
-        document.getElementById("playAgainButton").addEventListener("click", () => {
-            selectScale(currentScale);
-        });
-
-        document.getElementById("closeResultButton").addEventListener("click", () => {
-            resultModal.hidden = true;
-        });
-
-        resultModal.addEventListener("click", event => {
-            if (event.target === resultModal) {
-                resultModal.hidden = true;
-            }
-        });
-
-        selectScale("blues");
-    </script>
-
+document.addEventListener('DOMContentLoaded',UIController.init);
+</script>
 </body>
 </html>
