@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Pentatonic Fretboard Challenge</title>
+    <title>Pentatonic Fretboard Challenge 2.1</title>
 
     <style>
         * {
@@ -115,11 +115,12 @@
 
         .fretboard {
             display: grid;
-            grid-template-columns: repeat(16, minmax(42px, 1fr));
-            grid-template-columns: repeat(16, 1fr);
+            grid-template-columns: repeat(16, minmax(0, 1fr));
+            grid-template-rows: repeat(6, clamp(30px, 4.5vw, 48px));
+
             width: 100%;
             margin-bottom: 24px;
-            overflow-x: auto;
+            overflow: hidden;
 
             /* Donker palissanderhout met subtiele nerven */
             background:
@@ -163,8 +164,8 @@
 
         .fret {
             position: relative;
-            height: 28px;
             min-width: 0;
+            height: 100%;
 
             display: flex;
             align-items: center;
@@ -273,7 +274,7 @@
         }
         .answers {
             display: grid;
-            grid-template-columns: repeat(9, minmax(48px, 1fr));
+            grid-template-columns: repeat(9, minmax(0, 1fr));
             gap: 8px;
         }
         .fret.target {
@@ -315,7 +316,7 @@
                 inset 0 1px 1px rgba(255,255,255,0.8);
         }
         .answers button {
-            min-height: 30px;
+            min-height: 58px;
 
             background:
                 linear-gradient(180deg, #41464e, #2d3137);
@@ -461,12 +462,6 @@
                 border-radius: 12px;
             }
 
-            .answers {
-                display: grid;
-                grid-template-columns: repeat(9, minmax(40px, 1fr));
-                gap: 6px;
-            }
-
             .dashboard {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
@@ -497,7 +492,40 @@
             }
 
             .fretboard {
-                grid-template-columns: repeat(16, 44px);
+                grid-template-columns: repeat(16, minmax(0, 1fr));
+                grid-template-rows: repeat(6, clamp(30px, 9vw, 38px));
+                border-width: 3px;
+            }
+
+            .fret {
+                border-right-width: 2px;
+            }
+
+            .fret::before {
+                left: -2px;
+                right: -2px;
+            }
+
+            .fret.target {
+                outline-width: 3px;
+                outline-offset: -3px;
+            }
+
+            .fret.target::after {
+                width: clamp(22px, 7vw, 29px);
+                height: clamp(22px, 7vw, 29px);
+                font-size: clamp(16px, 5vw, 20px);
+            }
+
+            .answers {
+                gap: 5px;
+            }
+
+            .answers button {
+                min-width: 0;
+                min-height: 50px;
+                padding: 6px 2px;
+                font-size: clamp(16px, 5vw, 21px);
             }
         }
 
@@ -507,7 +535,7 @@
             }
 
             .answers button {
-                min-height: 30px;
+                min-height: 54px;
             }
         }
     </style>
