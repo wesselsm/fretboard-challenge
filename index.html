@@ -452,7 +452,7 @@
             color: #fff;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 400px) {
             body {
                 /*padding: 8px;*/
                 padding-bottom:70px;
@@ -519,17 +519,6 @@
                 height: clamp(22px, 7vw, 29px);
                 font-size: clamp(16px, 5vw, 20px);
             }
-
-            .answers {
-                gap: 5px;
-            }
-
-            .answers button {
-                min-width: 0;
-                min-height: 50px;
-                padding: 6px 2px;
-                font-size: clamp(16px, 5vw, 21px);
-            }
         }
 
         @media (max-width: 400px) {
@@ -537,22 +526,30 @@
                 flex: 1 1 100%;
             }
 
-            .answers button {
-                min-height:40px;
-                font-size:18px;
-                border-radius:8px;
+            .answers{
                 position:fixed;
                 left:0;
                 right:0;
                 bottom:0;
 
-                padding:8px;
+                display:grid;
+                grid-template-columns:repeat(9,1fr);
+
+                gap:4px;
+                padding:6px;
 
                 background:#1b1d20;
-
                 border-top:1px solid #555;
 
                 z-index:100;
+            }
+
+            .answers button{
+
+                width:100%;
+                min-height:38px;
+                font-size:18px;
+
             }
         }
     </style>
