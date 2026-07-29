@@ -1,34 +1,31 @@
-# FretMaster Studio 4.0
+# FretMaster Studio 4.0.1 Alpha 1 — Sprint 4.2
 
-Dit pakket is een Progressive Web App (PWA).
+Sprint 4.2 expands the statistics dashboard with filters and visual progress trends.
 
-## Belangrijk
-Open `index.html` niet rechtstreeks via `file://`. Een PWA heeft een webserver nodig:
-- HTTPS op internet, of
-- localhost tijdens testen.
+## Filters
 
-## Snel lokaal testen op een pc
-Open een terminal/opdrachtprompt in deze map en voer uit:
+Statistics can now be filtered by:
 
-    python -m http.server 8080
+- scale;
+- the latest 10, 20 or 50 rounds;
+- all recorded rounds.
 
-Open daarna:
+Every overview card, table and interval summary responds to the selected filter.
 
-    http://localhost:8080
+## Trend chart
 
-## Publiceren
-Upload de volledige inhoud van deze map ongewijzigd naar een HTTPS-webhost, bijvoorbeeld:
-- GitHub Pages
-- Netlify
-- Cloudflare Pages
-- een eigen webserver
+The dashboard contains a responsive canvas chart for:
 
-Na het eerste bezoek kan de app worden geïnstalleerd en offline worden gebruikt.
+- score;
+- accuracy;
+- average response time.
 
-## Projectbestanden
-De webapp ondersteunt:
-- .fms-projecten
-- .json-back-ups
-- .txt als mobiele terugvalroute
+The chart is implemented without an external chart library and automatically
+resizes with the browser window.
 
-Op ondersteunde browsers kan een .fms-bestand bovendien rechtstreeks met FretMaster Studio worden geopend.
+## Trend interpretation
+
+The application compares the first and second half of the selected rounds and
+shows whether the chosen metric improved, declined or remained stable.
+
+For response time, a lower time is treated as an improvement.

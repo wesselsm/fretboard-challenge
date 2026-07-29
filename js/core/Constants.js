@@ -1,0 +1,34 @@
+export const Events = Object.freeze({
+    APP_INITIALIZED: "app:initialized",
+    APP_ERROR: "app:error",
+    REPOSITORY_CHANGED: "repository:changed",
+    SETTINGS_CHANGED: "settings:changed",
+
+    TRAINER_START_REQUESTED: "trainer:start-requested",
+    TRAINER_STOP_REQUESTED: "trainer:stop-requested",
+    TRAINER_RESTART_REQUESTED: "trainer:restart-requested",
+    ANSWER_SELECTED: "answer:selected",
+
+    SCALE_SELECTED: "scale:selected",
+    EXERCISE_CHANGED: "exercise:changed",
+    SCALE_LIBRARY_OPEN_REQUESTED: "scale-library:open-requested",
+    SCALE_LIBRARY_CLOSE_REQUESTED: "scale-library:close-requested",
+    SCALE_CREATE_REQUESTED: "scale:create-requested",
+    SCALE_DUPLICATE_REQUESTED: "scale:duplicate-requested",
+    SCALE_DELETE_REQUESTED: "scale:delete-requested",
+    SCALE_EDIT_REQUESTED: "scale:edit-requested",
+    SCALE_SAVE_REQUESTED: "scale:save-requested",
+    SCALE_EXPORT_REQUESTED: "scale:export-requested",
+    SCALE_IMPORT_REQUESTED: "scale:import-requested",
+    SCALE_RESET_REQUESTED: "scale:reset-requested",
+    SCALE_CLEAR_CUSTOM_REQUESTED: "scale:clear-custom-requested",
+    STATISTICS_OPEN_REQUESTED: "statistics:open-requested",
+    STATISTICS_CLEAR_REQUESTED: "statistics:clear-requested",
+    STATISTICS_CHANGED: "statistics:changed",
+
+    ROUND_STARTED: "round:started",
+    ROUND_STOPPED: "round:stopped",
+    ROUND_FINISHED: "round:finished",
+    QUESTION_CHANGED: "question:changed",
+    QUESTION_ANSWERED: "question:answered"
+});
