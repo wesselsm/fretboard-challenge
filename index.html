@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Fretboard Trainer 3.1.0</title>
+<title>FretMaster Studio 3.2.1</title>
 <style>
 *{box-sizing:border-box}
 :root{--bg:#0d0e10;--panel:#191b1f;--card:#22252a;--border:#3e434b;--muted:#aeb4bc;--accent:#ffd84d;--danger:#b62324;--good:#238636}
@@ -27,20 +27,63 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
 .toast{position:fixed;left:50%;bottom:18px;z-index:300;max-width:calc(100% - 30px);padding:10px 15px;border-radius:9px;background:#202328;border:1px solid #59606a;box-shadow:0 12px 28px rgba(0,0,0,.55);transform:translateX(-50%);font-weight:bold}
 @media(max-width:700px){body{padding:5px 5px calc(55px + env(safe-area-inset-bottom))}.app{padding:9px;border-radius:11px}.app-header{margin-bottom:7px;align-items:flex-start}.brand h1{font-size:21px}.version{font-size:10px}.header-actions{gap:4px}.manager-button{min-height:33px;padding:5px 8px;font-size:11px}.scale-bar{margin-bottom:7px}.scale-select-wrap{padding:4px 6px}.scale-select-wrap label{display:none}.scale-select{padding:5px;font-size:13px}.secondary-button{min-height:34px;padding:5px 8px;font-size:12px}.dashboard{gap:4px;margin-bottom:7px}.stat-card{display:block;padding:5px 2px;text-align:center;border-radius:7px}.stat-icon{display:none}.stat-text{align-items:center}.stat-label{font-size:clamp(8px,2.7vw,11px)}.stat-value{font-size:clamp(14px,4.4vw,19px)}.stat-value small{font-size:9px}.scale-title{margin-bottom:5px;font-size:15px}.fretboard{grid-template-rows:repeat(6,clamp(20px,6vw,26px));margin-bottom:5px;border-width:3px;border-radius:7px}.fret{border-right-width:2px}.fret::before{left:-2px;right:-2px}.string5::before{height:4px}.string4::before{height:3.4px}.string3::before{height:2.8px}.string2::before{height:2.2px}.string1::before{height:1.8px}.string0::before{height:1.3px}.fret.target{outline-width:3px;outline-offset:-3px}.fret.target::after{width:clamp(19px,5.7vw,24px);height:clamp(19px,5.7vw,24px);font-size:clamp(13px,4.2vw,17px)}.answers{position:fixed;left:50%;bottom:0;z-index:90;width:min(calc(100% - 10px),1090px);grid-template-columns:repeat(min(var(--answer-count,9),9),minmax(0,1fr));gap:3px;padding:5px 5px calc(5px + env(safe-area-inset-bottom));background:rgba(25,27,31,.98);border:1px solid #3b3f46;border-bottom:0;border-radius:9px 9px 0 0;box-shadow:0 -7px 18px rgba(0,0,0,.45);transform:translateX(-50%)}.answers button{min-height:37px;padding:2px 0;border-radius:6px;font-size:clamp(12px,3.7vw,16px)}.scale-list{grid-template-columns:1fr}.manager-tools{grid-template-columns:1fr 1fr}.manager-tools .search-input{grid-column:1/-1}.result-grid{grid-template-columns:1fr}.editor-form{grid-template-columns:1fr}.editor-panel{padding:12px}.editor-tools{gap:5px}.tool-button,.interval-select{min-height:34px;padding:5px 8px;font-size:12px}.editor-status{width:100%;margin-left:0}.editor-fretboard{grid-template-rows:repeat(6,clamp(24px,7vw,31px))}.editor-note{min-width:18px;height:18px;font-size:10px}}
 @media(orientation:landscape) and (max-height:600px) and (pointer:coarse){body{padding:3px 5px calc(47px + env(safe-area-inset-bottom))}.app{padding:5px 7px}.app-header{margin-bottom:4px}.brand h1{font-size:17px}.version{display:none}.manager-button{min-height:28px;padding:3px 7px;font-size:10px}.scale-bar{margin-bottom:4px}.scale-select-wrap{padding:2px 5px}.scale-select{padding:3px;font-size:11px}.dashboard{gap:4px;margin-bottom:4px}.stat-card{padding:3px 2px}.stat-label{font-size:8px}.stat-value{font-size:14px}.scale-title{margin-bottom:3px;font-size:12px}.fretboard{grid-template-rows:repeat(6,clamp(17px,4.2vh,22px));margin-bottom:3px}.fret.target::after{width:18px;height:18px;font-size:12px}.answers{width:min(calc(100% - 10px),1090px);padding:4px 5px calc(4px + env(safe-area-inset-bottom))}.answers button{min-height:30px;font-size:12px}.modal-panel{max-height:94vh;padding:10px}.editor-fretboard{grid-template-rows:repeat(6,clamp(20px,6vh,27px))}}
+
+.data-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.data-action{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:14px;text-align:left;background:#202328;border:1px solid #3d424a;border-radius:11px}.data-action h3{margin:0;font-size:16px}.data-action p{margin:0;color:var(--muted);font-size:13px;line-height:1.4}.data-action button{margin-top:auto}.import-options{display:grid;gap:8px;margin-top:12px;padding:12px;background:#202328;border:1px solid #3d424a;border-radius:11px}.radio-row{display:flex;align-items:flex-start;gap:9px}.radio-row input{margin-top:3px}.radio-row span{display:block}.radio-row small{display:block;color:var(--muted);margin-top:2px}.file-status{min-height:20px;color:var(--muted);font-size:13px}.data-note{margin:12px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+
+@media(max-width:700px){.data-grid{grid-template-columns:1fr}}
+
+.project-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;padding:9px 10px;background:#202328;border:1px solid #3d424a;border-radius:10px}.project-identity{display:flex;align-items:center;gap:8px;min-width:0}.project-label{color:var(--muted);font-size:12px}.project-identity strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dirty-badge{padding:3px 7px;color:#171717;background:var(--accent);border-radius:999px;font-size:11px;font-weight:bold}.project-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.compact-button{min-height:34px;padding:5px 10px;font-size:12px}
+.project-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.project-form .full{grid-column:1/-1}.project-form label{display:block;margin-bottom:5px;color:var(--muted);font-size:12px}.project-textarea{width:100%;min-height:92px;padding:10px 12px;resize:vertical;color:#fff;background:#17191d;border:1px solid #555b64;border-radius:9px;font:inherit}.project-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.project-meta div{padding:10px;background:#202328;border:1px solid #3d424a;border-radius:9px}.project-meta span{display:block;color:var(--muted);font-size:11px}.project-meta strong{display:block;margin-top:3px;font-size:13px}.recent-projects{display:grid;gap:7px}.recent-project{display:flex;justify-content:space-between;gap:10px;padding:9px 10px;background:#202328;border:1px solid #3d424a;border-radius:9px}.recent-project small{color:var(--muted)}
+@media(max-width:700px){.project-bar{align-items:flex-start;flex-direction:column}.project-actions{width:100%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}.compact-button{padding:5px 2px;font-size:10px}.project-form{grid-template-columns:1fr}.project-form .full{grid-column:auto}.project-meta{grid-template-columns:1fr}}
+
+
+.result-panel{width:min(720px,100%)}
+.performance-results{grid-template-columns:repeat(3,1fr)}
+.result-primary{border-color:var(--accent);box-shadow:inset 0 0 0 1px rgba(255,216,77,.35)}
+.result-primary strong{color:var(--accent);font-size:25px}
+.question-breakdown{margin:14px 0;text-align:left;background:#202328;border:1px solid #3d424a;border-radius:10px;overflow:hidden}
+.question-breakdown summary{padding:11px 13px;cursor:pointer;font-weight:bold}
+.question-table-wrap{max-height:260px;overflow:auto;border-top:1px solid #3d424a}
+.question-table{width:100%;border-collapse:collapse;font-size:13px}
+.question-table th,.question-table td{padding:8px 10px;text-align:right;border-bottom:1px solid #343941}
+.question-table th:first-child,.question-table td:first-child{text-align:left}
+.question-table th:nth-child(2),.question-table td:nth-child(2){text-align:left}
+.question-table thead th{position:sticky;top:0;background:#292d33;color:var(--muted);z-index:1}
+.question-table .answer-correct{color:#63d471;font-weight:bold}
+.question-table .answer-wrong{color:#ff7779;font-weight:bold}
+.score-explanation{margin:10px 0 14px;color:var(--muted);font-size:12px;line-height:1.45}
+@media(max-width:700px){.performance-results{grid-template-columns:repeat(2,1fr)}.question-table th,.question-table td{padding:7px 6px;font-size:12px}}
+
 </style>
 </head>
 <body>
 <div class="app">
   <header class="app-header">
-    <div class="brand"><h1>Fretboard Trainer</h1><div class="version">Versie 3.1.0 · Custom Scale Editor</div></div>
-    <div class="header-actions"><button id="newScaleButton" class="manager-button" type="button">＋ Nieuwe schaal</button><button id="openManagerButton" class="manager-button" type="button">☰ Schalenbibliotheek</button></div>
+    <div class="brand"><h1>FretMaster Studio</h1><div class="version">Versie 3.2.1 · Performance Score</div></div>
+    <div class="header-actions"><button id="newScaleButton" class="manager-button" type="button">＋ Nieuwe schaal</button><button id="openManagerButton" class="manager-button" type="button">☰ Schalenbibliotheek</button><button id="openDataButton" class="manager-button" type="button">↕ Import / export</button></div>
   </header>
+
+  <div class="project-bar" aria-label="Projectbeheer">
+    <div class="project-identity">
+      <span class="project-label">Project</span>
+      <strong id="currentProjectName">Naamloos project</strong>
+      <span id="projectDirtyBadge" class="dirty-badge" hidden>Niet opgeslagen</span>
+    </div>
+    <div class="project-actions">
+      <button id="newProjectButton" class="secondary-button compact-button" type="button">Nieuw</button>
+      <button id="openProjectButton" class="secondary-button compact-button" type="button">Openen…</button>
+      <button id="saveProjectButton" class="primary-button compact-button" type="button">Opslaan</button>
+      <button id="saveAsProjectButton" class="secondary-button compact-button" type="button">Opslaan als…</button>
+      <button id="projectInfoButton" class="secondary-button compact-button" type="button">Info</button>
+      <input id="projectFileInput" type="file" accept=".fms,application/json" hidden>
+    </div>
+  </div>
   <div class="scale-bar">
     <div class="scale-select-wrap"><label for="scaleSelect">Actieve schaal</label><select id="scaleSelect" class="scale-select"></select></div>
     <button id="restartButton" class="secondary-button" type="button">↻ Nieuwe ronde</button>
   </div>
   <div class="dashboard" aria-label="Spelstatistieken">
-    <div class="stat-card"><span class="stat-icon">🎯</span><span class="stat-text"><span class="stat-label">Score</span><span class="stat-value" id="score">0</span></span></div>
+    <div class="stat-card"><span class="stat-icon">🎯</span><span class="stat-text"><span class="stat-label">Performance</span><span class="stat-value" id="score">0</span></span></div>
     <div class="stat-card"><span class="stat-icon">🏆</span><span class="stat-text"><span class="stat-label">High score</span><span class="stat-value" id="highScore">0</span></span></div>
     <div class="stat-card"><span class="stat-icon">🔢</span><span class="stat-text"><span class="stat-label">Vraag</span><span class="stat-value"><span id="question">0</span><small>/30</small></span></span></div>
     <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-text"><span class="stat-label">Tijd</span><span class="stat-value" id="timer">00:00</span></span></div>
@@ -50,12 +93,51 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
   <div id="answers" class="answers" aria-label="Antwoorden"></div>
 </div>
 
+
+<div id="projectModal" class="modal" hidden>
+  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+    <header class="modal-header"><div><h2 id="projectModalTitle">Projectinformatie</h2><div class="version">Gegevens die in het .fms-projectbestand worden bewaard</div></div><button id="closeProjectModalButton" class="close-icon" type="button" aria-label="Sluiten">×</button></header>
+    <div class="project-form">
+      <div><label for="projectNameInput">Projectnaam</label><input id="projectNameInput" class="text-input" type="text" maxlength="80"></div>
+      <div><label for="projectAuthorInput">Auteur</label><input id="projectAuthorInput" class="text-input" type="text" maxlength="80"></div>
+      <div class="full"><label for="projectDescriptionInput">Beschrijving</label><textarea id="projectDescriptionInput" class="project-textarea" maxlength="1000"></textarea></div>
+    </div>
+    <div class="project-meta">
+      <div><span>Aangemaakt</span><strong id="projectCreatedValue">—</strong></div>
+      <div><span>Laatst gewijzigd</span><strong id="projectModifiedValue">—</strong></div>
+      <div><span>Formaat</span><strong>FMS 1.0</strong></div>
+    </div>
+    <div class="library-section"><h3>RECENTE PROJECTEN</h3><div id="recentProjectsList" class="recent-projects"></div></div>
+    <p class="data-note">Een browser mag een bestaand bestand niet stilzwijgend overschrijven. Daarom downloadt “Opslaan” telkens een nieuwe .fms-versie. Vervang of archiveer oudere bestanden zelf in je Downloads-map.</p>
+    <div class="editor-actions"><button id="cancelProjectInfoButton" class="secondary-button" type="button">Annuleren</button><button id="applyProjectInfoButton" class="primary-button" type="button">Gegevens toepassen</button></div>
+  </section>
+</div>
+
 <div id="managerModal" class="modal" hidden>
   <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="managerTitle">
     <header class="modal-header"><div><h2 id="managerTitle">Schalenbibliotheek</h2><div class="version">Kies, dupliceer en beheer oefenpatronen</div></div><button id="closeManagerButton" class="close-icon" type="button" aria-label="Sluiten">×</button></header>
     <div class="manager-tools"><input id="scaleSearch" class="search-input" type="search" placeholder="Zoek een schaal…"><button id="managerNewScaleButton" class="primary-button" type="button">＋ Nieuw</button><button id="clearSearchButton" class="secondary-button" type="button">Wissen</button></div>
     <div class="library-section"><h3>STANDAARDSCHALEN</h3><div id="builtInScaleList" class="scale-list"></div></div>
     <div class="library-section"><h3>MIJN SCHALEN</h3><div id="customScaleList" class="scale-list"></div></div>
+  </section>
+</div>
+
+
+<div id="dataModal" class="modal" hidden>
+  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="dataTitle">
+    <header class="modal-header"><div><h2 id="dataTitle">JSON-uitwisseling en back-up</h2><div class="version">Voor losse schalen en compatibiliteit; volledige projecten gebruikt u als .fms</div></div><button id="closeDataButton" class="close-icon" type="button" aria-label="Sluiten">×</button></header>
+    <div class="data-grid">
+      <article class="data-action"><h3>Eigen schalen exporteren</h3><p>Download alleen de patronen uit “Mijn schalen” als een compact JSON-bestand.</p><button id="exportScalesButton" class="primary-button" type="button">Schalen exporteren</button></article>
+      <article class="data-action"><h3>JSON-back-up</h3><p>Bewaar eigen schalen, high scores, actieve schaal en instellingen in één JSON-bestand.</p><button id="backupDataButton" class="primary-button" type="button">Back-up maken</button></article>
+      <article class="data-action"><h3>Persoonlijke HTML</h3><p>Maak een zelfstandige kopie van FretMaster Studio waarin je huidige gegevens zijn ingebouwd.</p><button id="exportHtmlButton" class="secondary-button" type="button">Persoonlijke HTML maken</button></article>
+      <article class="data-action"><h3>Bestand importeren</h3><p>Lees een eerder geëxporteerd JSON-bestand in. Je kiest zelf hoe dubbele schalen worden behandeld.</p><button id="chooseImportButton" class="secondary-button" type="button">JSON-bestand kiezen</button><input id="importFileInput" type="file" accept=".json,application/json" hidden><div id="importFileStatus" class="file-status" aria-live="polite">Nog geen bestand gekozen.</div></article>
+    </div>
+    <div class="import-options" aria-label="Behandeling van dubbele schalen">
+      <strong>Bij dubbele naam of hetzelfde schaal-ID:</strong>
+      <label class="radio-row"><input type="radio" name="importConflict" value="copy" checked><span>Importeren als kopie<small>Bestaande schalen blijven staan; de geïmporteerde schaal krijgt een unieke naam.</small></span></label>
+      <label class="radio-row"><input type="radio" name="importConflict" value="overwrite"><span>Bestaande schaal overschrijven<small>De geïmporteerde versie vervangt de schaal met dezelfde naam of hetzelfde ID.</small></span></label>
+    </div>
+    <p class="data-note">Een persoonlijke HTML zet de ingebouwde back-up één keer terug wanneer je het bestand voor het eerst opent. Browseropslag blijft apparaat- en browsergebonden; bewaar daarom ook een JSON-back-up.</p>
   </section>
 </div>
 
@@ -78,7 +160,24 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
 <div id="resultModal" class="modal" hidden>
   <section class="modal-panel result-panel" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
     <div style="font-size:44px">🏆</div><h2 id="resultTitle">Ronde voltooid</h2><p id="recordMessage" class="record-message"></p>
-    <div class="result-grid"><div class="result-item"><span>Score</span><strong id="resultScore">0 / 30</strong></div><div class="result-item"><span>Tijd</span><strong id="resultTime">00:00</strong></div><div class="result-item"><span>High score</span><strong id="resultHighScore">0 / 30</strong></div></div>
+    <div class="result-grid performance-results">
+      <div class="result-item result-primary"><span>Performance Score</span><strong id="resultScore">0</strong></div>
+      <div class="result-item"><span>Correct</span><strong id="resultCorrect">0 / 30</strong></div>
+      <div class="result-item"><span>Gemiddelde reactietijd</span><strong id="resultAverage">0,00 s</strong></div>
+      <div class="result-item"><span>Beste streak</span><strong id="resultStreak">0</strong></div>
+      <div class="result-item"><span>Totale tijd</span><strong id="resultTime">00:00</strong></div>
+      <div class="result-item"><span>High score</span><strong id="resultHighScore">0</strong></div>
+    </div>
+    <details class="question-breakdown" open>
+      <summary>Score-overzicht per vraag</summary>
+      <div class="question-table-wrap">
+        <table class="question-table">
+          <thead><tr><th>Vraag</th><th>Antwoord</th><th>Tijd</th><th>Punten</th></tr></thead>
+          <tbody id="questionResultsBody"></tbody>
+        </table>
+      </div>
+    </details>
+    <p class="score-explanation">Per goed antwoord: <strong>maximaal 10, afgerond 100 − 20 × reactietijd in seconden</strong>. Een fout antwoord levert 0 punten op.</p>
     <div class="result-actions"><button id="playAgainButton" class="primary-button" type="button">Nog een ronde</button><button id="closeResultButton" class="secondary-button" type="button">Sluiten</button></div>
   </section>
 </div>
@@ -111,24 +210,155 @@ const ScaleRepository=(()=>{
   function uniqueId(){return `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`}
   function saveCustom(scale){const item=clone(scale);const index=custom.findIndex(s=>s.id===item.id);if(index>=0)custom[index]=item;else custom.push(item);StorageService.setCustomScales(custom);return clone(item)}
   function remove(id){custom=custom.filter(scale=>scale.id!==id);StorageService.setCustomScales(custom)}
-  return {initialize:loadCustom,getAll:()=>clone(all()),getBuiltIns:()=>clone(builtIns),getCustom:()=>clone(custom),getById:id=>clone(all().find(s=>s.id===id)||builtIns[2]),isCustom:id=>custom.some(s=>s.id===id),countNotes:scale=>scale.pattern.flat().filter(Boolean).length,createBlank:()=>({id:uniqueId(),name:'Nieuwe schaal',subtitle:'Custom Scale Challenge',category:'custom',pattern:emptyPattern()}),duplicate:source=>({id:uniqueId(),name:`${source.name} kopie`,subtitle:`${source.name} kopie Challenge`,category:'custom',pattern:clone(source.pattern)}),save:saveCustom,remove};
+  return {initialize:loadCustom,reload:loadCustom,replaceCustom:scales=>{custom=clone(scales).filter(isValidScale);StorageService.setCustomScales(custom)},isValid:isValidScale,newId:uniqueId,getAll:()=>clone(all()),getBuiltIns:()=>clone(builtIns),getCustom:()=>clone(custom),getById:id=>clone(all().find(s=>s.id===id)||builtIns[2]),isCustom:id=>custom.some(s=>s.id===id),countNotes:scale=>scale.pattern.flat().filter(Boolean).length,createBlank:()=>({id:uniqueId(),name:'Nieuwe schaal',subtitle:'Custom Scale Challenge',category:'custom',pattern:emptyPattern()}),duplicate:source=>({id:uniqueId(),name:`${source.name} kopie`,subtitle:`${source.name} kopie Challenge`,category:'custom',pattern:clone(source.pattern)}),save:saveCustom,remove};
 })();
 
 /* 2. PERSISTENT STORAGE */
 const StorageService=(()=>{
-  const KEYS={currentScale:'fretboardTrainer_currentScale',highScores:'fretboardTrainer_highScores',customScales:'fretboardTrainer_customScales'};
+  const KEYS={currentScale:'fretboardTrainer_currentScale',highScores:'fretboardTrainer_highScores',customScales:'fretboardTrainer_customScales',settings:'fretMasterStudio_settings',project:'fretMasterStudio_project',recentProjects:'fretMasterStudio_recentProjects',autoBackups:'fretMasterStudio_autoBackups'};
   const readObject=(key,fallback)=>{try{const value=JSON.parse(localStorage.getItem(key));return value??fallback}catch{return fallback}};
-  return {getCurrentScale:()=>localStorage.getItem(KEYS.currentScale)||'blues',setCurrentScale:id=>localStorage.setItem(KEYS.currentScale,id),getHighScore:id=>Number(readObject(KEYS.highScores,{})[id]||0),setHighScore:(id,value)=>{const all=readObject(KEYS.highScores,{});all[id]=value;localStorage.setItem(KEYS.highScores,JSON.stringify(all))},resetHighScore:id=>{const all=readObject(KEYS.highScores,{});delete all[id];localStorage.setItem(KEYS.highScores,JSON.stringify(all))},getCustomScales:()=>readObject(KEYS.customScales,[]),setCustomScales:scales=>localStorage.setItem(KEYS.customScales,JSON.stringify(scales))};
+  const writeObject=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+  return {
+    keys:()=>clone(KEYS),
+    getCurrentScale:()=>localStorage.getItem(KEYS.currentScale)||'blues',
+    setCurrentScale:id=>localStorage.setItem(KEYS.currentScale,id),
+    getHighScores:()=>readObject(KEYS.highScores,{}),
+    setHighScores:value=>writeObject(KEYS.highScores,value&&typeof value==='object'?value:{}),
+    getHighScore:id=>Number(readObject(KEYS.highScores,{})[id]||0),
+    setHighScore:(id,value)=>{const all=readObject(KEYS.highScores,{});all[id]=value;writeObject(KEYS.highScores,all)},
+    resetHighScore:id=>{const all=readObject(KEYS.highScores,{});delete all[id];writeObject(KEYS.highScores,all)},
+    getCustomScales:()=>readObject(KEYS.customScales,[]),
+    setCustomScales:scales=>writeObject(KEYS.customScales,scales),
+    getSettings:()=>readObject(KEYS.settings,{}),
+    setSettings:value=>writeObject(KEYS.settings,value&&typeof value==='object'?value:{}),
+    getProject:()=>readObject(KEYS.project,null),setProject:value=>writeObject(KEYS.project,value),
+    getRecentProjects:()=>readObject(KEYS.recentProjects,[]),setRecentProjects:value=>writeObject(KEYS.recentProjects,value),
+    getAutoBackups:()=>readObject(KEYS.autoBackups,[]),setAutoBackups:value=>writeObject(KEYS.autoBackups,value)
+  };
 })();
 
 /* 3. TIMER SERVICE */
-const TimerService=(()=>{let startedAt=0,elapsed=0,interval=null,onTick=()=>{};const format=ms=>{const s=Math.floor(ms/1000);return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`};const current=()=>startedAt?elapsed+(performance.now()-startedAt):elapsed;return {configure:callback=>onTick=callback,start:()=>{clearInterval(interval);elapsed=0;startedAt=performance.now();onTick(format(0));interval=setInterval(()=>onTick(format(current())),250)},stop:()=>{if(startedAt){elapsed=current();startedAt=0}clearInterval(interval);interval=null;onTick(format(elapsed));return elapsed},reset:()=>{clearInterval(interval);interval=null;startedAt=0;elapsed=0;onTick(format(0))},formatted:()=>format(current())}})();
+const TimerService=(()=>{let startedAt=0,elapsed=0,interval=null,onTick=()=>{};const format=ms=>{const s=Math.floor(ms/1000);return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`};const current=()=>startedAt?elapsed+(performance.now()-startedAt):elapsed;return {configure:callback=>onTick=callback,start:()=>{clearInterval(interval);elapsed=0;startedAt=performance.now();onTick(format(0));interval=setInterval(()=>onTick(format(current())),250)},stop:()=>{if(startedAt){elapsed=current();startedAt=0}clearInterval(interval);interval=null;onTick(format(elapsed));return elapsed},reset:()=>{clearInterval(interval);interval=null;startedAt=0;elapsed=0;onTick(format(0))},formatted:()=>format(current()),milliseconds:()=>current()}})();
 
 /* 4. FRETBOARD VIEW */
 const FretboardView=(()=>{const element=document.getElementById('fretboard');function render(pattern){element.innerHTML='';pattern.forEach((row,stringIndex)=>row.forEach((code,fretIndex)=>{const cell=document.createElement('div');cell.className=`fret string${stringIndex}`;if(code)cell.classList.add(code[0]==='p'?'pink':'green');cell.dataset.string=stringIndex;cell.dataset.fret=fretIndex;element.appendChild(cell)}))}function clearTarget(){element.querySelectorAll('.target').forEach(cell=>cell.classList.remove('target'))}function showTarget(position){clearTarget();element.querySelector(`[data-string="${position.string}"][data-fret="${position.fret}"]`)?.classList.add('target')}return {render,clearTarget,showTarget}})();
 
 /* 5. GAME ENGINE */
-const GameEngine=(()=>{const TOTAL=30;let scale=null,positions=[],score=0,question=0,current=null,accepting=false,active=false;const listeners={update:()=>{},finish:()=>{}};function playable(pattern){const result=[];pattern.forEach((row,string)=>row.forEach((code,fret)=>{if(code)result.push({string,fret,color:code[0],answer:code.slice(1)})}));return result}function next(){if(question>=TOTAL){finish();return}current=positions[Math.floor(Math.random()*positions.length)];question++;accepting=true;FretboardView.showTarget(current);listeners.update({score,question,total:TOTAL})}function finish(){active=false;accepting=false;const elapsed=TimerService.stop();FretboardView.clearTarget();listeners.finish({score,total:TOTAL,elapsed,time:TimerService.formatted(),scaleId:scale.id})}function start(newScale){scale=newScale;positions=playable(scale.pattern);score=0;question=0;current=null;accepting=false;active=positions.length>0;FretboardView.render(scale.pattern);listeners.update({score,question,total:TOTAL});if(!positions.length){TimerService.reset();return false}TimerService.start();next();return true}function stop(){active=false;accepting=false;TimerService.stop();FretboardView.clearTarget()}function answer(value){if(!active||!accepting||!current)return;accepting=false;const correct=value.toLowerCase()===current.answer.toLowerCase();if(correct)score++;document.body.classList.add(correct?'correct':'wrong');listeners.update({score,question,total:TOTAL});setTimeout(()=>{document.body.classList.remove('correct','wrong');next()},250)}return {start,stop,answer,onUpdate:fn=>listeners.update=fn,onFinish:fn=>listeners.finish=fn}})();
+const GameEngine=(()=>{
+  const TOTAL=30;
+  let scale=null,positions=[],performanceScore=0,correctCount=0,question=0,current=null,accepting=false,active=false;
+  let questionStartedAt=0,currentStreak=0,bestStreak=0,questionResults=[];
+  const listeners={update:()=>{},finish:()=>{}};
+
+  function playable(pattern){
+    const result=[];
+    pattern.forEach((row,string)=>row.forEach((code,fret)=>{
+      if(code)result.push({string,fret,color:code[0],answer:code.slice(1)});
+    }));
+    return result;
+  }
+
+  function pointsForAnswer(responseSeconds,correct){
+    if(!correct)return 0;
+    return Math.max(10,Math.round(100-(20*responseSeconds)));
+  }
+
+  function state(){
+    return {score:performanceScore,correct:correctCount,question,total:TOTAL,currentStreak,bestStreak};
+  }
+
+  function next(){
+    if(question>=TOTAL){finish();return}
+    current=positions[Math.floor(Math.random()*positions.length)];
+    question++;
+    accepting=true;
+    questionStartedAt=TimerService.milliseconds();
+    FretboardView.showTarget(current);
+    listeners.update(state());
+  }
+
+  function finish(){
+    active=false;
+    accepting=false;
+    const elapsed=TimerService.stop();
+    FretboardView.clearTarget();
+    const answered=questionResults.length;
+    const averageSeconds=answered?questionResults.reduce((sum,item)=>sum+item.responseSeconds,0)/answered:0;
+    listeners.finish({
+      score:performanceScore,
+      correct:correctCount,
+      total:TOTAL,
+      elapsed,
+      time:TimerService.formatted(),
+      averageSeconds,
+      bestStreak,
+      questionResults:questionResults.map(item=>({...item})),
+      scaleId:scale.id
+    });
+  }
+
+  function start(newScale){
+    scale=newScale;
+    positions=playable(scale.pattern);
+    performanceScore=0;
+    correctCount=0;
+    question=0;
+    current=null;
+    accepting=false;
+    currentStreak=0;
+    bestStreak=0;
+    questionResults=[];
+    active=positions.length>0;
+    FretboardView.render(scale.pattern);
+    listeners.update(state());
+    if(!positions.length){TimerService.reset();return false}
+    TimerService.start();
+    next();
+    return true;
+  }
+
+  function stop(){
+    active=false;
+    accepting=false;
+    TimerService.stop();
+    FretboardView.clearTarget();
+  }
+
+  function answer(value){
+    if(!active||!accepting||!current)return;
+    accepting=false;
+    const responseSeconds=Math.max(0,(TimerService.milliseconds()-questionStartedAt)/1000);
+    const correct=value.toLowerCase()===current.answer.toLowerCase();
+    const points=pointsForAnswer(responseSeconds,correct);
+
+    if(correct){
+      correctCount++;
+      currentStreak++;
+      bestStreak=Math.max(bestStreak,currentStreak);
+    }else{
+      currentStreak=0;
+    }
+
+    performanceScore+=points;
+    questionResults.push({
+      question,
+      expected:current.answer,
+      selected:value,
+      correct,
+      responseSeconds,
+      points
+    });
+
+    document.body.classList.add(correct?'correct':'wrong');
+    listeners.update(state());
+    setTimeout(()=>{
+      document.body.classList.remove('correct','wrong');
+      next();
+    },250);
+  }
+
+  return {start,stop,answer,onUpdate:fn=>listeners.update=fn,onFinish:fn=>listeners.finish=fn};
+})();
 
 /* 6. SCALE EDITOR */
 const ScaleEditor=(()=>{
@@ -140,34 +370,374 @@ const ScaleEditor=(()=>{
   function applyCell(cell){const s=Number(cell.dataset.string),f=Number(cell.dataset.fret);draft.pattern[s][f]=tool==='erase'?'':tool+intervalSelect.value;render()}
   function open(scale=null,asCopy=false){GameEngine.stop();editingExisting=Boolean(scale&&ScaleRepository.isCustom(scale.id)&&!asCopy);draft=scale?(asCopy?ScaleRepository.duplicate(scale):clone(scale)):ScaleRepository.createBlank();if(!editingExisting&&scale&&!asCopy&& !ScaleRepository.isCustom(scale.id))draft=ScaleRepository.duplicate(scale);nameInput.value=draft.name;subtitle.textContent=editingExisting?'Bewerk je eigen patroon':'Maak een nieuw oefenpatroon';duplicateButton.hidden=!editingExisting;setTool('g');intervalSelect.value='1';render();modal.hidden=false;nameInput.focus()}
   function close(){modal.hidden=true}
-  function save(){const name=nameInput.value.trim();if(!name){nameInput.focus();Toast.show('Geef de schaal eerst een naam.');return}if(!ScaleRepository.countNotes(draft)){Toast.show('Voeg minimaal één positie toe.');return}draft.name=name;draft.subtitle=`${name} Challenge`;draft.category='custom';const saved=ScaleRepository.save(draft);close();onSave(saved.id);Toast.show(`“${name}” is opgeslagen.`)}
+  function save(){const name=nameInput.value.trim();if(!name){nameInput.focus();Toast.show('Geef de schaal eerst een naam.');return}if(!ScaleRepository.countNotes(draft)){Toast.show('Voeg minimaal één positie toe.');return}draft.name=name;draft.subtitle=`${name} Challenge`;draft.category='custom';const saved=ScaleRepository.save(draft);close();onSave(saved.id);ProjectManager.markChanged();Toast.show(`“${name}” is opgeslagen.`)}
   board.addEventListener('click',event=>{const cell=event.target.closest('.fret');if(cell)applyCell(cell)});document.querySelectorAll('[data-editor-tool]').forEach(button=>button.addEventListener('click',()=>setTool(button.dataset.editorTool)));document.getElementById('clearPatternButton').addEventListener('click',()=>{if(confirm('Het hele patroon leegmaken?')){draft.pattern=emptyPattern();render()}});document.getElementById('saveScaleButton').addEventListener('click',save);document.getElementById('cancelEditorButton').addEventListener('click',close);document.getElementById('closeEditorButton').addEventListener('click',close);duplicateButton.addEventListener('click',()=>{draft=ScaleRepository.duplicate(draft);draft.name=`${nameInput.value.trim()||draft.name} kopie`;nameInput.value=draft.name;editingExisting=false;duplicateButton.hidden=true;subtitle.textContent='Nieuwe kopie bewerken';Toast.show('Kopie aangemaakt. Sla hem op als nieuwe schaal.')});modal.addEventListener('click',event=>{if(event.target===modal)close()});fillIntervals();return {open,close,onSave:fn=>onSave=fn};
 })();
 
 /* 7. SCALE MANAGER UI */
 const ScaleManager=(()=>{
   const modal=document.getElementById('managerModal'),builtList=document.getElementById('builtInScaleList'),customList=document.getElementById('customScaleList'),search=document.getElementById('scaleSearch');let onSelect=()=>{},onEdit=()=>{},activeId='';
-  function card(scale,isCustom){const el=document.createElement('article');el.className=`scale-card${scale.id===activeId?' active':''}`;const notes=ScaleRepository.countNotes(scale);el.innerHTML=`<div><h4>${escapeHtml(scale.name)}</h4><div class="scale-meta">${notes} speelbare posities · high score ${StorageService.getHighScore(scale.id)}/30</div></div><div class="scale-card-actions"><button class="small-button select-scale-button" type="button">Kiezen</button>${isCustom?'<button class="small-button edit-scale-button" type="button">Bewerken</button>':'<button class="small-button duplicate-scale-button" type="button">Als kopie</button>'}<button class="small-button reset-score-button" type="button">Score wissen</button>${isCustom?'<button class="small-button delete-scale-button" type="button">Verwijderen</button>':''}</div>`;el.querySelector('.select-scale-button').addEventListener('click',()=>{onSelect(scale.id);close()});el.querySelector('.reset-score-button').addEventListener('click',()=>{if(confirm(`High score van ${scale.name} wissen?`)){StorageService.resetHighScore(scale.id);render();UIController.refreshHighScore()}});el.querySelector(isCustom?'.edit-scale-button':'.duplicate-scale-button').addEventListener('click',()=>{close();onEdit(scale,!isCustom)});if(isCustom)el.querySelector('.delete-scale-button').addEventListener('click',()=>{if(confirm(`“${scale.name}” definitief verwijderen?`)){ScaleRepository.remove(scale.id);StorageService.resetHighScore(scale.id);if(activeId===scale.id)onSelect('blues');UIController.refreshLibrary();render();Toast.show('Schaal verwijderd.')}});return el}
+  function card(scale,isCustom){const el=document.createElement('article');el.className=`scale-card${scale.id===activeId?' active':''}`;const notes=ScaleRepository.countNotes(scale);el.innerHTML=`<div><h4>${escapeHtml(scale.name)}</h4><div class="scale-meta">${notes} speelbare posities · high score ${StorageService.getHighScore(scale.id)}</div></div><div class="scale-card-actions"><button class="small-button select-scale-button" type="button">Kiezen</button>${isCustom?'<button class="small-button edit-scale-button" type="button">Bewerken</button>':'<button class="small-button duplicate-scale-button" type="button">Als kopie</button>'}<button class="small-button reset-score-button" type="button">Score wissen</button>${isCustom?'<button class="small-button delete-scale-button" type="button">Verwijderen</button>':''}</div>`;el.querySelector('.select-scale-button').addEventListener('click',()=>{onSelect(scale.id);close()});el.querySelector('.reset-score-button').addEventListener('click',()=>{if(confirm(`High score van ${scale.name} wissen?`)){StorageService.resetHighScore(scale.id);ProjectManager.markChanged();render();UIController.refreshHighScore()}});el.querySelector(isCustom?'.edit-scale-button':'.duplicate-scale-button').addEventListener('click',()=>{close();onEdit(scale,!isCustom)});if(isCustom)el.querySelector('.delete-scale-button').addEventListener('click',()=>{if(confirm(`“${scale.name}” definitief verwijderen?`)){ScaleRepository.remove(scale.id);StorageService.resetHighScore(scale.id);ProjectManager.markChanged();if(activeId===scale.id)onSelect('blues');UIController.refreshLibrary();render();Toast.show('Schaal verwijderd.')}});return el}
   function renderList(target,scales,isCustom,emptyText){target.innerHTML='';scales.forEach(scale=>target.appendChild(card(scale,isCustom)));if(!scales.length)target.innerHTML=`<div class="empty-state">${emptyText}</div>`}
   function render(){const term=search.value.trim().toLowerCase();renderList(builtList,ScaleRepository.getBuiltIns().filter(s=>s.name.toLowerCase().includes(term)),false,'Geen standaardschaal gevonden.');renderList(customList,ScaleRepository.getCustom().filter(s=>s.name.toLowerCase().includes(term)),true,term?'Geen eigen schaal gevonden.':'Nog geen eigen patronen. Maak je eerste schaal met “Nieuw”.')}
   function open(currentId){activeId=currentId;search.value='';render();modal.hidden=false;search.focus()}function close(){modal.hidden=true}
   search.addEventListener('input',render);document.getElementById('clearSearchButton').addEventListener('click',()=>{search.value='';render();search.focus()});document.getElementById('closeManagerButton').addEventListener('click',close);document.getElementById('managerNewScaleButton').addEventListener('click',()=>{close();onEdit(null,false)});modal.addEventListener('click',event=>{if(event.target===modal)close()});return {open,close,render,onSelect:fn=>onSelect=fn,onEdit:fn=>onEdit=fn};
 })();
 
+
+
+/* 8. PROJECT MANAGER */
+const ProjectManager=(()=>{
+  const FORMAT_VERSION='1.0';
+  const modal=document.getElementById('projectModal');
+  const fileInput=document.getElementById('projectFileInput');
+  const nameDisplay=document.getElementById('currentProjectName');
+  const dirtyBadge=document.getElementById('projectDirtyBadge');
+  const fields={
+    name:document.getElementById('projectNameInput'),
+    author:document.getElementById('projectAuthorInput'),
+    description:document.getElementById('projectDescriptionInput'),
+    created:document.getElementById('projectCreatedValue'),
+    modified:document.getElementById('projectModifiedValue'),
+    recent:document.getElementById('recentProjectsList')
+  };
+  let meta=null,dirty=false,lastSignature='',backupTimer=null;
+
+  const now=()=>new Date().toISOString();
+  const cleanFilename=name=>(name||'FretMaster Project').replace(/[<>:"/\\|?*\x00-\x1F]/g,'_').trim().slice(0,80)||'FretMaster Project';
+  const formatDate=value=>{if(!value)return '—';try{return new Date(value).toLocaleString('nl-NL')}catch{return value}};
+  function defaultMeta(){
+    const stamp=now();
+    return {format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.1',projectId:`project-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,name:'Naamloos project',author:'',description:'',created:stamp,modified:stamp};
+  }
+  function payload(){
+    return {
+      format:'FMS',
+      formatVersion:FORMAT_VERSION,
+      appVersion:'3.2.1',
+      project:{...meta,modified:now()},
+      data:{
+        customScales:ScaleRepository.getCustom(),
+        highScores:StorageService.getHighScores(),
+        currentScale:StorageService.getCurrentScale(),
+        settings:StorageService.getSettings()
+      }
+    };
+  }
+  function download(name,text,type='application/vnd.fretmaster.project+json'){
+    const blob=new Blob([text],{type:`${type};charset=utf-8`});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  function setDirty(value=true){
+    dirty=value;
+    dirtyBadge.hidden=!dirty;
+  }
+  function saveMeta(){
+    meta.modified=now();
+    StorageService.setProject(meta);
+    nameDisplay.textContent=meta.name;
+  }
+  function addRecent(){
+    const recent=StorageService.getRecentProjects().filter(item=>item.projectId!==meta.projectId);
+    recent.unshift({projectId:meta.projectId,name:meta.name,modified:meta.modified});
+    StorageService.setRecentProjects(recent.slice(0,8));
+  }
+  function save(saveAs=false){
+    if(saveAs){
+      const entered=prompt('Naam voor het projectbestand:',meta.name);
+      if(entered===null)return;
+      const trimmed=entered.trim();
+      if(trimmed)meta.name=trimmed;
+    }
+    meta.modified=now();meta.appVersion='3.2.1';
+    saveMeta();addRecent();
+    download(`${cleanFilename(meta.name)}.fms`,JSON.stringify(payload(),null,2));
+    setDirty(false);
+    Toast.show(`Project “${meta.name}” is opgeslagen als .fms.`);
+  }
+  function autosnapshot(force=false){
+    const pack=payload();
+    const signature=JSON.stringify(pack.data);
+    if(!force&&signature===lastSignature)return;
+    lastSignature=signature;
+    const backups=StorageService.getAutoBackups();
+    backups.unshift({created:now(),projectId:meta.projectId,name:meta.name,payload:pack});
+    StorageService.setAutoBackups(backups.slice(0,5));
+  }
+  function clearProjectData(){
+    ScaleRepository.replaceCustom([]);
+    StorageService.setHighScores({});
+    StorageService.setSettings({});
+    StorageService.setCurrentScale('blues');
+  }
+  function newProject(){
+    if((dirty||ScaleRepository.getCustom().length)&&!confirm('Nieuw project maken? Niet-opgeslagen wijzigingen blijven alleen in de automatische lokale back-up bewaard.'))return;
+    autosnapshot(true);
+    clearProjectData();
+    meta=defaultMeta();saveMeta();setDirty(true);lastSignature='';
+    UIController.refreshAfterImport();
+    Toast.show('Nieuw project aangemaakt.');
+  }
+  function validate(pack){
+    if(!pack||pack.format!=='FMS'||!pack.project||!pack.data)throw new Error('Dit is geen geldig FretMaster Studio-project.');
+    if(!Array.isArray(pack.data.customScales))throw new Error('Het project bevat geen geldige schalenlijst.');
+    const valid=pack.data.customScales.filter(ScaleRepository.isValid);
+    if(valid.length!==pack.data.customScales.length)throw new Error('Het project bevat één of meer beschadigde schaalpatronen.');
+    return pack;
+  }
+  function load(pack){
+    validate(pack);
+    autosnapshot(true);
+    ScaleRepository.replaceCustom(pack.data.customScales);
+    StorageService.setHighScores(pack.data.highScores||{});
+    StorageService.setSettings(pack.data.settings||{});
+    StorageService.setCurrentScale(pack.data.currentScale||'blues');
+    meta={...defaultMeta(),...pack.project,format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.1',modified:now()};
+    saveMeta();addRecent();setDirty(false);lastSignature='';
+    UIController.refreshAfterImport();
+  }
+  async function openFile(file){
+    let pack;
+    try{pack=JSON.parse(await file.text())}catch{throw new Error('Het gekozen bestand kan niet als project worden gelezen.')}
+    load(pack);
+    Toast.show(`Project “${meta.name}” is geopend.`);
+  }
+  function renderRecent(){
+    const items=StorageService.getRecentProjects();
+    fields.recent.innerHTML=items.length?items.map(item=>`<div class="recent-project"><span>${escapeHtml(item.name)}</span><small>${escapeHtml(formatDate(item.modified))}</small></div>`).join(''):'<div class="empty-state">Nog geen recent opgeslagen projecten.</div>';
+  }
+  function openInfo(){
+    fields.name.value=meta.name;fields.author.value=meta.author||'';fields.description.value=meta.description||'';
+    fields.created.textContent=formatDate(meta.created);fields.modified.textContent=formatDate(meta.modified);renderRecent();modal.hidden=false;
+  }
+  function closeInfo(){modal.hidden=true}
+  function applyInfo(){
+    meta.name=fields.name.value.trim()||'Naamloos project';
+    meta.author=fields.author.value.trim();
+    meta.description=fields.description.value.trim();
+    saveMeta();setDirty(true);closeInfo();Toast.show('Projectinformatie bijgewerkt.');
+  }
+  function init(){
+    meta=StorageService.getProject()||defaultMeta();
+    saveMeta();nameDisplay.textContent=meta.name;setDirty(false);
+    lastSignature=JSON.stringify(payload().data);
+    backupTimer=setInterval(()=>autosnapshot(false),10000);
+    window.addEventListener('beforeunload',()=>autosnapshot(false));
+    document.getElementById('newProjectButton').addEventListener('click',newProject);
+    document.getElementById('openProjectButton').addEventListener('click',()=>fileInput.click());
+    document.getElementById('saveProjectButton').addEventListener('click',()=>save(false));
+    document.getElementById('saveAsProjectButton').addEventListener('click',()=>save(true));
+    document.getElementById('projectInfoButton').addEventListener('click',openInfo);
+    fileInput.addEventListener('change',async()=>{const file=fileInput.files?.[0];if(!file)return;try{await openFile(file)}catch(error){Toast.show(error.message)}finally{fileInput.value=''}});
+    document.getElementById('closeProjectModalButton').addEventListener('click',closeInfo);
+    document.getElementById('cancelProjectInfoButton').addEventListener('click',closeInfo);
+    document.getElementById('applyProjectInfoButton').addEventListener('click',applyInfo);
+    modal.addEventListener('click',event=>{if(event.target===modal)closeInfo()});
+  }
+  function markChanged(){setDirty(true);autosnapshot(false)}
+  return {init,save,newProject,openInfo,markChanged,getMeta:()=>clone(meta),createPayload:payload};
+})();
+
+
+/* 8. IMPORT / EXPORT / BACK-UP */
+const DataManager=(()=>{
+  const modal=document.getElementById('dataModal');
+  const fileInput=document.getElementById('importFileInput');
+  const status=document.getElementById('importFileStatus');
+
+  function timestamp(){
+    const d=new Date(),pad=n=>String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}`;
+  }
+  function download(name,text,type='application/json'){
+    const blob=new Blob([text],{type:`${type};charset=utf-8`});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  function exportPackage(includeAll){
+    return {
+      app:'FretMaster Studio',
+      format:includeAll?'full-backup':'scales-only',
+      schemaVersion:1,
+      createdAt:new Date().toISOString(),
+      appVersion:'3.2.1',
+      project:ProjectManager.getMeta(),
+      customScales:ScaleRepository.getCustom(),
+      ...(includeAll?{
+        highScores:StorageService.getHighScores(),
+        currentScale:StorageService.getCurrentScale(),
+        settings:StorageService.getSettings()
+      }:{})
+    };
+  }
+  function exportScales(){
+    download(`FretMaster_Scales_${timestamp()}.json`,JSON.stringify(exportPackage(false),null,2));
+    Toast.show('Eigen schalen zijn geëxporteerd.');
+  }
+  function backup(){
+    download(`FretMaster_Backup_${timestamp()}.json`,JSON.stringify(exportPackage(true),null,2));
+    Toast.show('JSON-back-up is gemaakt.');
+  }
+  function uniqueName(base,names){
+    let name=base||'Geïmporteerde schaal',number=2;
+    while(names.has(name.toLowerCase()))name=`${base||'Geïmporteerde schaal'} (${number++})`;
+    names.add(name.toLowerCase());
+    return name;
+  }
+  function normaliseScale(scale){
+    if(!ScaleRepository.isValid(scale))return null;
+    const item=clone(scale);
+    item.name=String(item.name||'Geïmporteerde schaal').trim().slice(0,50)||'Geïmporteerde schaal';
+    item.subtitle=`${item.name} Challenge`;
+    item.category='custom';
+    return item;
+  }
+  function importPackage(data,mode){
+    const incoming=Array.isArray(data)?data:(Array.isArray(data.customScales)?data.customScales:Array.isArray(data.scales)?data.scales:null);
+    if(!incoming)throw new Error('Dit bestand bevat geen herkenbare schalen.');
+    const valid=incoming.map(normaliseScale).filter(Boolean);
+    if(!valid.length)throw new Error('Er zijn geen geldige patronen in dit bestand gevonden.');
+
+    const existing=ScaleRepository.getCustom();
+    const names=new Set(existing.map(s=>s.name.toLowerCase()));
+    const idMap={};
+    let added=0,replaced=0;
+
+    valid.forEach(imported=>{
+      const matchIndex=existing.findIndex(s=>s.id===imported.id||s.name.toLowerCase()===imported.name.toLowerCase());
+      if(matchIndex>=0&&mode==='overwrite'){
+        const originalId=imported.id;
+        const oldId=existing[matchIndex].id;
+        imported.id=oldId;
+        names.add(imported.name.toLowerCase());
+        existing[matchIndex]=imported;
+        idMap[originalId]=oldId;
+        replaced++;
+      }else{
+        const originalId=imported.id;
+        imported.id=ScaleRepository.newId();
+        imported.name=uniqueName(imported.name,names);
+        imported.subtitle=`${imported.name} Challenge`;
+        existing.push(imported);
+        idMap[originalId]=imported.id;
+        added++;
+      }
+    });
+    ScaleRepository.replaceCustom(existing);
+
+    if(data.highScores&&typeof data.highScores==='object'){
+      const scores=StorageService.getHighScores();
+      Object.entries(data.highScores).forEach(([id,value])=>{
+        const target=idMap[id]||id;
+        const numeric=Math.max(0,Math.min(30,Number(value)||0));
+        scores[target]=Math.max(Number(scores[target]||0),numeric);
+      });
+      StorageService.setHighScores(scores);
+    }
+    if(data.settings&&typeof data.settings==='object')StorageService.setSettings(data.settings);
+    if(typeof data.currentScale==='string'){
+      const mapped=idMap[data.currentScale]||data.currentScale;
+      StorageService.setCurrentScale(mapped);
+    }
+    return {added,replaced,invalid:incoming.length-valid.length};
+  }
+  async function readFile(file){
+    const text=await file.text();
+    let data;
+    try{data=JSON.parse(text)}catch{throw new Error('Het gekozen bestand is geen geldige JSON-back-up.')}
+    const mode=document.querySelector('input[name="importConflict"]:checked')?.value||'copy';
+    const result=importPackage(data,mode);
+    ScaleRepository.reload();
+    UIController.refreshAfterImport();
+    return result;
+  }
+  function embeddedRestoreScript(payload){
+    const backupId=`${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const keys=StorageService.keys();
+    const safe=JSON.stringify(payload).replace(/</g,'\\u003c');
+    return `<script>(function(){try{const marker='fretMasterStudio_embedded_${backupId}';if(localStorage.getItem(marker))return;const data=${safe};localStorage.setItem(${JSON.stringify(keys.customScales)},JSON.stringify(data.customScales||[]));localStorage.setItem(${JSON.stringify(keys.highScores)},JSON.stringify(data.highScores||{}));localStorage.setItem(${JSON.stringify(keys.settings)},JSON.stringify(data.settings||{}));if(data.currentScale)localStorage.setItem(${JSON.stringify(keys.currentScale)},data.currentScale);localStorage.setItem(marker,'1')}catch(error){console.error('Embedded FretMaster back-up kon niet worden hersteld.',error)}})();<\/script>`;
+  }
+  function exportPersonalHtml(){
+    const payload=exportPackage(true);
+    const cloneDoc=document.documentElement.cloneNode(true);
+    cloneDoc.querySelectorAll('.modal').forEach(el=>el.hidden=true);
+    const toast=cloneDoc.querySelector('#toast');if(toast)toast.hidden=true;
+    const mainScript=cloneDoc.querySelector('script');
+    if(!mainScript)throw new Error('De appcode kon niet worden gevonden.');
+    mainScript.insertAdjacentHTML('beforebegin',embeddedRestoreScript(payload));
+    const output='<!DOCTYPE html>\n'+cloneDoc.outerHTML;
+    download(`FretMaster_Studio_Personal_${timestamp()}.html`,output,'text/html');
+    Toast.show('Persoonlijke HTML is gemaakt.');
+  }
+  function open(){modal.hidden=false}
+  function close(){modal.hidden=true}
+  document.getElementById('exportScalesButton').addEventListener('click',exportScales);
+  document.getElementById('backupDataButton').addEventListener('click',backup);
+  document.getElementById('exportHtmlButton').addEventListener('click',()=>{try{exportPersonalHtml()}catch(error){Toast.show(error.message)}});
+  document.getElementById('chooseImportButton').addEventListener('click',()=>fileInput.click());
+  fileInput.addEventListener('change',async()=>{
+    const file=fileInput.files?.[0];
+    if(!file)return;
+    status.textContent=`Bezig met importeren: ${file.name}`;
+    try{
+      const result=await readFile(file);
+      status.textContent=`Klaar: ${result.added} toegevoegd, ${result.replaced} overschreven${result.invalid?`, ${result.invalid} overgeslagen`:''}.`;
+      Toast.show('Import voltooid.');
+    }catch(error){
+      status.textContent=error.message;
+      Toast.show('Importeren is niet gelukt.');
+    }finally{fileInput.value=''}
+  });
+  document.getElementById('closeDataButton').addEventListener('click',close);
+  modal.addEventListener('click',event=>{if(event.target===modal)close()});
+  return {open,close};
+})();
+
+
 const Toast=(()=>{const el=document.getElementById('toast');let timer;return {show(message){clearTimeout(timer);el.textContent=message;el.hidden=false;timer=setTimeout(()=>el.hidden=true,2600)}}})();
 
 /* 8. APPLICATION CONTROLLER */
 const UIController=(()=>{
-  const els={select:document.getElementById('scaleSelect'),title:document.getElementById('scaleTitle'),score:document.getElementById('score'),high:document.getElementById('highScore'),question:document.getElementById('question'),timer:document.getElementById('timer'),answers:document.getElementById('answers'),resultModal:document.getElementById('resultModal'),resultScore:document.getElementById('resultScore'),resultTime:document.getElementById('resultTime'),resultHigh:document.getElementById('resultHighScore'),record:document.getElementById('recordMessage')};let currentScale=null;
+  const els={select:document.getElementById('scaleSelect'),title:document.getElementById('scaleTitle'),score:document.getElementById('score'),high:document.getElementById('highScore'),question:document.getElementById('question'),timer:document.getElementById('timer'),answers:document.getElementById('answers'),resultModal:document.getElementById('resultModal'),resultScore:document.getElementById('resultScore'),resultCorrect:document.getElementById('resultCorrect'),resultAverage:document.getElementById('resultAverage'),resultStreak:document.getElementById('resultStreak'),resultTime:document.getElementById('resultTime'),resultHigh:document.getElementById('resultHighScore'),questionResultsBody:document.getElementById('questionResultsBody'),record:document.getElementById('recordMessage')};let currentScale=null;
   function populateSelect(){const current=els.select.value;els.select.innerHTML='';const built=document.createElement('optgroup');built.label='Standaardschalen';ScaleRepository.getBuiltIns().forEach(scale=>built.appendChild(new Option(scale.name,scale.id)));els.select.appendChild(built);const customScales=ScaleRepository.getCustom();if(customScales.length){const custom=document.createElement('optgroup');custom.label='Mijn schalen';customScales.forEach(scale=>custom.appendChild(new Option(scale.name,scale.id)));els.select.appendChild(custom)}if(ScaleRepository.getAll().some(s=>s.id===current))els.select.value=current}
   function buildAnswers(scale){const present=new Set(scale.pattern.flat().filter(Boolean).map(code=>code.slice(1)));const values=INTERVALS.filter(i=>present.has(i));els.answers.innerHTML='';els.answers.style.setProperty('--answer-count',Math.max(values.length,1));values.forEach(value=>{const button=document.createElement('button');button.type='button';button.dataset.answer=value;button.textContent=value;button.addEventListener('click',()=>GameEngine.answer(value));els.answers.appendChild(button)})}
   function selectScale(id){currentScale=ScaleRepository.getById(id);StorageService.setCurrentScale(currentScale.id);populateSelect();els.select.value=currentScale.id;els.title.textContent=currentScale.subtitle||`${currentScale.name} Challenge`;buildAnswers(currentScale);refreshHighScore();els.resultModal.hidden=true;const started=GameEngine.start(currentScale);if(!started)Toast.show('Deze schaal bevat nog geen speelbare posities.')}
   function refreshHighScore(){if(currentScale)els.high.textContent=StorageService.getHighScore(currentScale.id)}
   function refreshLibrary(){populateSelect();ScaleManager.render()}
-  function handleFinish(result){const oldHigh=StorageService.getHighScore(result.scaleId);const isRecord=result.score>oldHigh;if(isRecord)StorageService.setHighScore(result.scaleId,result.score);const high=Math.max(oldHigh,result.score);els.high.textContent=high;els.resultScore.textContent=`${result.score} / ${result.total}`;els.resultTime.textContent=result.time;els.resultHigh.textContent=`${high} / ${result.total}`;els.record.textContent=isRecord?'Nieuwe high score!':'';els.resultModal.hidden=false}
+  function refreshAfterImport(){refreshLibrary();const stored=StorageService.getCurrentScale();const target=ScaleRepository.getAll().some(s=>s.id===stored)?stored:(currentScale?.id||'blues');selectScale(target)}
+  function handleFinish(result){
+    const oldHigh=StorageService.getHighScore(result.scaleId);
+    const isRecord=result.score>oldHigh;
+    if(isRecord){
+      StorageService.setHighScore(result.scaleId,result.score);
+      ProjectManager.markChanged();
+    }
+    const high=Math.max(oldHigh,result.score);
+    els.high.textContent=high;
+    els.resultScore.textContent=`${result.score} punten`;
+    els.resultCorrect.textContent=`${result.correct} / ${result.total}`;
+    els.resultAverage.textContent=`${result.averageSeconds.toLocaleString('nl-NL',{minimumFractionDigits:2,maximumFractionDigits:2})} s`;
+    els.resultStreak.textContent=`${result.bestStreak}`;
+    els.resultTime.textContent=result.time;
+    els.resultHigh.textContent=`${high} punten`;
+    els.record.textContent=isRecord?'Nieuw persoonlijk record!':'';
+    els.questionResultsBody.innerHTML=result.questionResults.map(item=>{
+      const answerClass=item.correct?'answer-correct':'answer-wrong';
+      const answerText=item.correct
+        ? `${escapeHtml(item.selected)} ✓`
+        : `${escapeHtml(item.selected)} ✗ (juist: ${escapeHtml(item.expected)})`;
+      const time=item.responseSeconds.toLocaleString('nl-NL',{minimumFractionDigits:2,maximumFractionDigits:2});
+      return `<tr><td>${item.question}</td><td class="${answerClass}">${answerText}</td><td>${time} s</td><td>${item.points}</td></tr>`;
+    }).join('');
+    els.resultModal.hidden=false;
+  }
   function editScale(scale,asCopy){ScaleEditor.open(scale,asCopy)}
-  function init(){ScaleRepository.initialize();populateSelect();TimerService.configure(value=>els.timer.textContent=value);GameEngine.onUpdate(state=>{els.score.textContent=state.score;els.question.textContent=state.question});GameEngine.onFinish(handleFinish);ScaleManager.onSelect(selectScale);ScaleManager.onEdit(editScale);ScaleEditor.onSave(id=>{refreshLibrary();selectScale(id)});els.select.addEventListener('change',()=>selectScale(els.select.value));document.getElementById('restartButton').addEventListener('click',()=>selectScale(currentScale.id));document.getElementById('openManagerButton').addEventListener('click',()=>ScaleManager.open(currentScale.id));document.getElementById('newScaleButton').addEventListener('click',()=>editScale(null,false));document.getElementById('playAgainButton').addEventListener('click',()=>selectScale(currentScale.id));document.getElementById('closeResultButton').addEventListener('click',()=>els.resultModal.hidden=true);els.resultModal.addEventListener('click',event=>{if(event.target===els.resultModal)els.resultModal.hidden=true});const stored=StorageService.getCurrentScale();selectScale(ScaleRepository.getAll().some(s=>s.id===stored)?stored:'blues')}
-  return {init,refreshHighScore,refreshLibrary};
+  function init(){ScaleRepository.initialize();populateSelect();TimerService.configure(value=>els.timer.textContent=value);GameEngine.onUpdate(state=>{els.score.textContent=state.score;els.question.textContent=state.question});GameEngine.onFinish(handleFinish);ScaleManager.onSelect(selectScale);ScaleManager.onEdit(editScale);ScaleEditor.onSave(id=>{refreshLibrary();selectScale(id)});els.select.addEventListener('change',()=>selectScale(els.select.value));document.getElementById('restartButton').addEventListener('click',()=>selectScale(currentScale.id));document.getElementById('openManagerButton').addEventListener('click',()=>ScaleManager.open(currentScale.id));document.getElementById('newScaleButton').addEventListener('click',()=>editScale(null,false));document.getElementById('openDataButton').addEventListener('click',DataManager.open);document.getElementById('playAgainButton').addEventListener('click',()=>selectScale(currentScale.id));document.getElementById('closeResultButton').addEventListener('click',()=>els.resultModal.hidden=true);els.resultModal.addEventListener('click',event=>{if(event.target===els.resultModal)els.resultModal.hidden=true});ProjectManager.init();const stored=StorageService.getCurrentScale();selectScale(ScaleRepository.getAll().some(s=>s.id===stored)?stored:'blues')}
+  return {init,refreshHighScore,refreshLibrary,refreshAfterImport};
 })();
 document.addEventListener('DOMContentLoaded',UIController.init);
 </script>
