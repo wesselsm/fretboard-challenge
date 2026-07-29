@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>FretMaster Studio 3.2.3</title>
+<title>FretMaster Studio 3.2.4</title>
 <style>
 *{box-sizing:border-box}
 :root{--bg:#0d0e10;--panel:#191b1f;--card:#22252a;--border:#3e434b;--muted:#aeb4bc;--accent:#ffd84d;--danger:#b62324;--good:#238636}
@@ -34,7 +34,7 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
 
 .project-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;padding:9px 10px;background:#202328;border:1px solid #3d424a;border-radius:10px}.project-identity{display:flex;align-items:center;gap:8px;min-width:0}.project-label{color:var(--muted);font-size:12px}.project-identity strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dirty-badge{padding:3px 7px;color:#171717;background:var(--accent);border-radius:999px;font-size:11px;font-weight:bold}.project-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.compact-button{min-height:34px;padding:5px 10px;font-size:12px}
 .project-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.project-form .full{grid-column:1/-1}.project-form label{display:block;margin-bottom:5px;color:var(--muted);font-size:12px}.project-textarea{width:100%;min-height:92px;padding:10px 12px;resize:vertical;color:#fff;background:#17191d;border:1px solid #555b64;border-radius:9px;font:inherit}.project-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.project-meta div{padding:10px;background:#202328;border:1px solid #3d424a;border-radius:9px}.project-meta span{display:block;color:var(--muted);font-size:11px}.project-meta strong{display:block;margin-top:3px;font-size:13px}.recent-projects{display:grid;gap:7px}.recent-project{display:flex;justify-content:space-between;gap:10px;padding:9px 10px;background:#202328;border:1px solid #3d424a;border-radius:9px}.recent-project small{color:var(--muted)}
-@media(max-width:700px){.project-bar{align-items:flex-start;flex-direction:column}.project-actions{width:100%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}.compact-button{padding:5px 2px;font-size:10px}.project-form{grid-template-columns:1fr}.project-form .full{grid-column:auto}.project-meta{grid-template-columns:1fr}}
+@media(max-width:700px){.project-bar{align-items:flex-start;flex-direction:column}.project-actions{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.compact-button{padding:5px 2px;font-size:10px}.project-form{grid-template-columns:1fr}.project-form .full{grid-column:auto}.project-meta{grid-template-columns:1fr}}
 
 
 .result-panel{width:min(720px,100%)}
@@ -61,12 +61,14 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
 .paste-import{margin-top:10px;padding:9px 10px;background:#202328;border:1px solid #3d424a;border-radius:9px}
 .paste-import summary{cursor:pointer;font-weight:bold}
 .paste-import textarea{margin:10px 0;min-height:130px}
+
+.mobile-project-text{min-height:260px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.4}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="app-header">
-    <div class="brand"><h1>FretMaster Studio</h1><div class="version">Versie 3.2.3 · Mobiele import</div></div>
+    <div class="brand"><h1>FretMaster Studio</h1><div class="version">Versie 3.2.4 · Mobiel project openen</div></div>
     <div class="header-actions"><button id="newScaleButton" class="manager-button" type="button">＋ Nieuwe schaal</button><button id="openManagerButton" class="manager-button" type="button">☰ Schalenbibliotheek</button><button id="openDataButton" class="manager-button" type="button">↕ Import / export</button></div>
   </header>
 
@@ -81,6 +83,7 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
       <label class="secondary-button compact-button file-picker-button">Openen…
         <input id="projectFileInput" class="native-file-input" type="file">
       </label>
+      <button id="mobileOpenProjectButton" class="secondary-button compact-button" type="button">Mobiel openen</button>
       <button id="saveProjectButton" class="primary-button compact-button" type="button">Opslaan</button>
       <button id="saveAsProjectButton" class="secondary-button compact-button" type="button">Opslaan als…</button>
       <button id="projectInfoButton" class="secondary-button compact-button" type="button">Info</button>
@@ -102,6 +105,26 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
 </div>
 
 
+
+<div id="mobileProjectModal" class="modal" hidden>
+  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="mobileProjectTitle">
+    <header class="modal-header">
+      <div>
+        <h2 id="mobileProjectTitle">Project mobiel openen</h2>
+        <div class="version">Voor telefoons die lokale .fms-bestanden niet aan de browser doorgeven</div>
+      </div>
+      <button id="closeMobileProjectButton" class="close-icon" type="button" aria-label="Sluiten">×</button>
+    </header>
+    <p class="data-note">Open het .fms-bestand eventueel als tekst, selecteer alles en plak de volledige inhoud hieronder. Hiermee wordt het complete project geopend, inclusief schalen, high scores en instellingen.</p>
+    <textarea id="mobileProjectText" class="project-textarea mobile-project-text" placeholder='Plak hier de volledige inhoud. Deze begint normaal met { en bevat "format": "FMS".'></textarea>
+    <div id="mobileProjectStatus" class="file-status" aria-live="polite"></div>
+    <div class="editor-actions">
+      <button id="cancelMobileProjectButton" class="secondary-button" type="button">Annuleren</button>
+      <button id="openPastedProjectButton" class="primary-button" type="button">Project openen</button>
+    </div>
+  </section>
+</div>
+
 <div id="projectModal" class="modal" hidden>
   <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
     <header class="modal-header"><div><h2 id="projectModalTitle">Projectinformatie</h2><div class="version">Gegevens die in het .fms-projectbestand worden bewaard</div></div><button id="closeProjectModalButton" class="close-icon" type="button" aria-label="Sluiten">×</button></header>
@@ -117,7 +140,11 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
     </div>
     <div class="library-section"><h3>RECENTE PROJECTEN</h3><div id="recentProjectsList" class="recent-projects"></div></div>
     <p class="data-note">Een browser mag een bestaand bestand niet stilzwijgend overschrijven. Daarom downloadt “Opslaan” telkens een nieuwe .fms-versie. Vervang of archiveer oudere bestanden zelf in je Downloads-map.</p>
-    <div class="editor-actions"><button id="cancelProjectInfoButton" class="secondary-button" type="button">Annuleren</button><button id="applyProjectInfoButton" class="primary-button" type="button">Gegevens toepassen</button></div>
+    <div class="editor-actions">
+      <button id="exportProjectTextButton" class="secondary-button" type="button">Mobiele tekstkopie (.txt)</button>
+      <button id="cancelProjectInfoButton" class="secondary-button" type="button">Annuleren</button>
+      <button id="applyProjectInfoButton" class="primary-button" type="button">Gegevens toepassen</button>
+    </div>
   </section>
 </div>
 
@@ -453,6 +480,9 @@ const FileCompatibility=(()=>{
 const ProjectManager=(()=>{
   const FORMAT_VERSION='1.0';
   const modal=document.getElementById('projectModal');
+  const mobileModal=document.getElementById('mobileProjectModal');
+  const mobileText=document.getElementById('mobileProjectText');
+  const mobileStatus=document.getElementById('mobileProjectStatus');
   const fileInput=document.getElementById('projectFileInput');
   const nameDisplay=document.getElementById('currentProjectName');
   const dirtyBadge=document.getElementById('projectDirtyBadge');
@@ -472,13 +502,13 @@ const ProjectManager=(()=>{
   const formatDate=value=>{if(!value)return '—';try{return new Date(value).toLocaleString('nl-NL')}catch{return value}};
   function defaultMeta(){
     const stamp=now();
-    return {format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.3',projectId:`project-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,name:'Naamloos project',author:'',description:'',created:stamp,modified:stamp};
+    return {format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.4',projectId:`project-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,name:'Naamloos project',author:'',description:'',created:stamp,modified:stamp};
   }
   function payload(){
     return {
       format:'FMS',
       formatVersion:FORMAT_VERSION,
-      appVersion:'3.2.3',
+      appVersion:'3.2.4',
       project:{...meta,modified:now()},
       data:{
         customScales:ScaleRepository.getCustom(),
@@ -515,7 +545,7 @@ const ProjectManager=(()=>{
       const trimmed=entered.trim();
       if(trimmed)meta.name=trimmed;
     }
-    meta.modified=now();meta.appVersion='3.2.3';
+    meta.modified=now();meta.appVersion='3.2.4';
     saveMeta();addRecent();
     download(`${cleanFilename(meta.name)}.fms`,JSON.stringify(payload(),null,2));
     setDirty(false);
@@ -558,7 +588,7 @@ const ProjectManager=(()=>{
     StorageService.setHighScores(pack.data.highScores||{});
     StorageService.setSettings(pack.data.settings||{});
     StorageService.setCurrentScale(pack.data.currentScale||'blues');
-    meta={...defaultMeta(),...pack.project,format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.3',modified:now()};
+    meta={...defaultMeta(),...pack.project,format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.4',modified:now()};
     saveMeta();addRecent();setDirty(false);lastSignature='';
     UIController.refreshAfterImport();
   }
@@ -584,6 +614,34 @@ const ProjectManager=(()=>{
     meta.description=fields.description.value.trim();
     saveMeta();setDirty(true);closeInfo();Toast.show('Projectinformatie bijgewerkt.');
   }
+
+  function openMobileDialog(){
+    mobileText.value='';
+    mobileStatus.textContent='';
+    mobileModal.hidden=false;
+    setTimeout(()=>mobileText.focus(),50);
+  }
+  function closeMobileDialog(){mobileModal.hidden=true}
+  function openPastedProject(){
+    try{
+      const pack=FileCompatibility.parseJsonText(mobileText.value);
+      load(pack);
+      mobileStatus.textContent=`Project “${meta.name}” is geopend.`;
+      Toast.show(`Project “${meta.name}” is geopend.`);
+      setTimeout(closeMobileDialog,350);
+    }catch(error){
+      mobileStatus.textContent=error.message;
+      Toast.show(error.message);
+    }
+  }
+  function exportTextCopy(){
+    meta.modified=now();
+    saveMeta();
+    addRecent();
+    download(`${cleanFilename(meta.name)}_mobiel.txt`,JSON.stringify(payload(),null,2),'text/plain');
+    Toast.show('Mobiele tekstkopie is opgeslagen.');
+  }
+
   function init(){
     meta=StorageService.getProject()||defaultMeta();
     saveMeta();nameDisplay.textContent=meta.name;setDirty(false);
@@ -591,6 +649,7 @@ const ProjectManager=(()=>{
     backupTimer=setInterval(()=>autosnapshot(false),10000);
     window.addEventListener('beforeunload',()=>autosnapshot(false));
     document.getElementById('newProjectButton').addEventListener('click',newProject);
+    document.getElementById('mobileOpenProjectButton').addEventListener('click',openMobileDialog);
     document.getElementById('saveProjectButton').addEventListener('click',()=>save(false));
     document.getElementById('saveAsProjectButton').addEventListener('click',()=>save(true));
     document.getElementById('projectInfoButton').addEventListener('click',openInfo);
@@ -605,6 +664,11 @@ const ProjectManager=(()=>{
     document.getElementById('closeProjectModalButton').addEventListener('click',closeInfo);
     document.getElementById('cancelProjectInfoButton').addEventListener('click',closeInfo);
     document.getElementById('applyProjectInfoButton').addEventListener('click',applyInfo);
+    document.getElementById('exportProjectTextButton').addEventListener('click',exportTextCopy);
+    document.getElementById('closeMobileProjectButton').addEventListener('click',closeMobileDialog);
+    document.getElementById('cancelMobileProjectButton').addEventListener('click',closeMobileDialog);
+    document.getElementById('openPastedProjectButton').addEventListener('click',openPastedProject);
+    mobileModal.addEventListener('click',event=>{if(event.target===mobileModal)closeMobileDialog()});
     modal.addEventListener('click',event=>{if(event.target===modal)closeInfo()});
   }
   function markChanged(){setDirty(true);autosnapshot(false)}
@@ -635,7 +699,7 @@ const DataManager=(()=>{
       format:includeAll?'full-backup':'scales-only',
       schemaVersion:1,
       createdAt:new Date().toISOString(),
-      appVersion:'3.2.3',
+      appVersion:'3.2.4',
       project:ProjectManager.getMeta(),
       customScales:ScaleRepository.getCustom(),
       ...(includeAll?{
