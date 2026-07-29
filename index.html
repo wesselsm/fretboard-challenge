@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>FretMaster Studio 3.2.4</title>
+<title>FretMaster Studio 4.0</title>
 <style>
 *{box-sizing:border-box}
 :root{--bg:#0d0e10;--panel:#191b1f;--card:#22252a;--border:#3e434b;--muted:#aeb4bc;--accent:#ffd84d;--danger:#b62324;--good:#238636}
@@ -63,12 +63,26 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
 .paste-import textarea{margin:10px 0;min-height:130px}
 
 .mobile-project-text{min-height:260px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.4}
+
+.connection-status{margin:-7px 4px 10px;color:var(--muted);font-size:11px}
+.connection-status.offline{color:var(--accent)}
+@media(display-mode:standalone){body{padding-top:max(8px,env(safe-area-inset-top))}.version::after{content:" · geïnstalleerd"}}
 </style>
+
+<meta name="theme-color" content="#191b1f">
+<meta name="description" content="FretMaster Studio – interactieve gitaartrainer voor intervallen en schaalpatronen.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FretMaster">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+
 </head>
 <body>
 <div class="app">
   <header class="app-header">
-    <div class="brand"><h1>FretMaster Studio</h1><div class="version">Versie 3.2.4 · Mobiel project openen</div></div>
+    <div class="brand"><h1>FretMaster Studio</h1><div class="version">Versie 4.0 · Installeerbare webapp</div></div>
     <div class="header-actions"><button id="newScaleButton" class="manager-button" type="button">＋ Nieuwe schaal</button><button id="openManagerButton" class="manager-button" type="button">☰ Schalenbibliotheek</button><button id="openDataButton" class="manager-button" type="button">↕ Import / export</button></div>
   </header>
 
@@ -80,15 +94,14 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
     </div>
     <div class="project-actions">
       <button id="newProjectButton" class="secondary-button compact-button" type="button">Nieuw</button>
-      <label class="secondary-button compact-button file-picker-button">Openen…
-        <input id="projectFileInput" class="native-file-input" type="file">
-      </label>
+      <button id="openProjectButton" class="secondary-button compact-button" type="button">Openen…</button>
+      <input id="projectFileInput" type="file" accept=".fms,.json,.txt,application/json,text/plain" hidden>
       <button id="mobileOpenProjectButton" class="secondary-button compact-button" type="button">Mobiel openen</button>
       <button id="saveProjectButton" class="primary-button compact-button" type="button">Opslaan</button>
       <button id="saveAsProjectButton" class="secondary-button compact-button" type="button">Opslaan als…</button>
       <button id="projectInfoButton" class="secondary-button compact-button" type="button">Info</button>
     </div>
-  </div><div id="projectFileStatus" class="file-status project-file-status" aria-live="polite"></div>
+  </div><div id="projectFileStatus" class="file-status project-file-status" aria-live="polite"></div><div id="appConnectionStatus" class="connection-status" aria-live="polite"></div>
   <div class="scale-bar">
     <div class="scale-select-wrap"><label for="scaleSelect">Actieve schaal</label><select id="scaleSelect" class="scale-select"></select></div>
     <button id="restartButton" class="secondary-button" type="button">↻ Nieuwe ronde</button>
@@ -502,13 +515,13 @@ const ProjectManager=(()=>{
   const formatDate=value=>{if(!value)return '—';try{return new Date(value).toLocaleString('nl-NL')}catch{return value}};
   function defaultMeta(){
     const stamp=now();
-    return {format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.4',projectId:`project-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,name:'Naamloos project',author:'',description:'',created:stamp,modified:stamp};
+    return {format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'4.0',projectId:`project-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,name:'Naamloos project',author:'',description:'',created:stamp,modified:stamp};
   }
   function payload(){
     return {
       format:'FMS',
       formatVersion:FORMAT_VERSION,
-      appVersion:'3.2.4',
+      appVersion:'4.0',
       project:{...meta,modified:now()},
       data:{
         customScales:ScaleRepository.getCustom(),
@@ -545,7 +558,7 @@ const ProjectManager=(()=>{
       const trimmed=entered.trim();
       if(trimmed)meta.name=trimmed;
     }
-    meta.modified=now();meta.appVersion='3.2.4';
+    meta.modified=now();meta.appVersion='4.0';
     saveMeta();addRecent();
     download(`${cleanFilename(meta.name)}.fms`,JSON.stringify(payload(),null,2));
     setDirty(false);
@@ -588,9 +601,36 @@ const ProjectManager=(()=>{
     StorageService.setHighScores(pack.data.highScores||{});
     StorageService.setSettings(pack.data.settings||{});
     StorageService.setCurrentScale(pack.data.currentScale||'blues');
-    meta={...defaultMeta(),...pack.project,format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.4',modified:now()};
+    meta={...defaultMeta(),...pack.project,format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'4.0',modified:now()};
     saveMeta();addRecent();setDirty(false);lastSignature='';
     UIController.refreshAfterImport();
+  }
+  async function chooseProjectFile(){
+    if('showOpenFilePicker' in window){
+      try{
+        const [handle]=await window.showOpenFilePicker({
+          multiple:false,
+          types:[{
+            description:'FretMaster projecten',
+            accept:{
+              'application/json':['.fms','.json'],
+              'text/plain':['.txt']
+            }
+          }]
+        });
+        if(handle){
+          const file=await handle.getFile();
+          projectFileStatus.textContent=`Bezig met openen: ${file.name} (${file.size} bytes)`;
+          await openFile(file);
+          projectFileStatus.textContent=`Geopend: ${file.name}`;
+        }
+        return;
+      }catch(error){
+        if(error&&error.name==='AbortError')return;
+        // Fall through to the universally supported input picker.
+      }
+    }
+    FileCompatibility.choose(fileInput);
   }
   async function openFile(file){
     if(!file)throw new Error('Er is geen bestand gekozen.');
@@ -649,6 +689,7 @@ const ProjectManager=(()=>{
     backupTimer=setInterval(()=>autosnapshot(false),10000);
     window.addEventListener('beforeunload',()=>autosnapshot(false));
     document.getElementById('newProjectButton').addEventListener('click',newProject);
+    document.getElementById('openProjectButton').addEventListener('click',chooseProjectFile);
     document.getElementById('mobileOpenProjectButton').addEventListener('click',openMobileDialog);
     document.getElementById('saveProjectButton').addEventListener('click',()=>save(false));
     document.getElementById('saveAsProjectButton').addEventListener('click',()=>save(true));
@@ -672,7 +713,7 @@ const ProjectManager=(()=>{
     modal.addEventListener('click',event=>{if(event.target===modal)closeInfo()});
   }
   function markChanged(){setDirty(true);autosnapshot(false)}
-  return {init,save,newProject,openInfo,markChanged,getMeta:()=>clone(meta),createPayload:payload};
+  return {init,save,newProject,openInfo,markChanged,openExternalFile:openFile,getMeta:()=>clone(meta),createPayload:payload};
 })();
 
 
@@ -699,7 +740,7 @@ const DataManager=(()=>{
       format:includeAll?'full-backup':'scales-only',
       schemaVersion:1,
       createdAt:new Date().toISOString(),
-      appVersion:'3.2.4',
+      appVersion:'4.0',
       project:ProjectManager.getMeta(),
       customScales:ScaleRepository.getCustom(),
       ...(includeAll?{
