@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>FretMaster Studio 3.2.2</title>
+<title>FretMaster Studio 3.2.3</title>
 <style>
 *{box-sizing:border-box}
 :root{--bg:#0d0e10;--panel:#191b1f;--card:#22252a;--border:#3e434b;--muted:#aeb4bc;--accent:#ffd84d;--danger:#b62324;--good:#238636}
@@ -54,12 +54,19 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
 .score-explanation{margin:10px 0 14px;color:var(--muted);font-size:12px;line-height:1.45}
 @media(max-width:700px){.performance-results{grid-template-columns:repeat(2,1fr)}.question-table th,.question-table td{padding:7px 6px;font-size:12px}}
 
+
+.file-picker-button{position:relative;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
+.native-file-input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:100px}
+.project-file-status{margin:-4px 4px 10px;min-height:0}
+.paste-import{margin-top:10px;padding:9px 10px;background:#202328;border:1px solid #3d424a;border-radius:9px}
+.paste-import summary{cursor:pointer;font-weight:bold}
+.paste-import textarea{margin:10px 0;min-height:130px}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="app-header">
-    <div class="brand"><h1>FretMaster Studio</h1><div class="version">Versie 3.2.2 · Mobiele bestandscompatibiliteit</div></div>
+    <div class="brand"><h1>FretMaster Studio</h1><div class="version">Versie 3.2.3 · Mobiele import</div></div>
     <div class="header-actions"><button id="newScaleButton" class="manager-button" type="button">＋ Nieuwe schaal</button><button id="openManagerButton" class="manager-button" type="button">☰ Schalenbibliotheek</button><button id="openDataButton" class="manager-button" type="button">↕ Import / export</button></div>
   </header>
 
@@ -71,13 +78,14 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
     </div>
     <div class="project-actions">
       <button id="newProjectButton" class="secondary-button compact-button" type="button">Nieuw</button>
-      <button id="openProjectButton" class="secondary-button compact-button" type="button">Openen…</button>
+      <label class="secondary-button compact-button file-picker-button">Openen…
+        <input id="projectFileInput" class="native-file-input" type="file">
+      </label>
       <button id="saveProjectButton" class="primary-button compact-button" type="button">Opslaan</button>
       <button id="saveAsProjectButton" class="secondary-button compact-button" type="button">Opslaan als…</button>
       <button id="projectInfoButton" class="secondary-button compact-button" type="button">Info</button>
-      <input id="projectFileInput" type="file" accept=".fms,.json,application/json,application/vnd.fretmaster.project+json,text/json,text/plain,application/octet-stream,*/*" hidden>
     </div>
-  </div>
+  </div><div id="projectFileStatus" class="file-status project-file-status" aria-live="polite"></div>
   <div class="scale-bar">
     <div class="scale-select-wrap"><label for="scaleSelect">Actieve schaal</label><select id="scaleSelect" class="scale-select"></select></div>
     <button id="restartButton" class="secondary-button" type="button">↻ Nieuwe ronde</button>
@@ -130,7 +138,16 @@ button,select,input{font:inherit}button:focus-visible,select:focus-visible,input
       <article class="data-action"><h3>Eigen schalen exporteren</h3><p>Download alleen de patronen uit “Mijn schalen” als een compact JSON-bestand.</p><button id="exportScalesButton" class="primary-button" type="button">Schalen exporteren</button></article>
       <article class="data-action"><h3>JSON-back-up</h3><p>Bewaar eigen schalen, high scores, actieve schaal en instellingen in één JSON-bestand.</p><button id="backupDataButton" class="primary-button" type="button">Back-up maken</button></article>
       <article class="data-action"><h3>Persoonlijke HTML</h3><p>Maak een zelfstandige kopie van FretMaster Studio waarin je huidige gegevens zijn ingebouwd.</p><button id="exportHtmlButton" class="secondary-button" type="button">Persoonlijke HTML maken</button></article>
-      <article class="data-action"><h3>Bestand importeren</h3><p>Lees een eerder geëxporteerd JSON-bestand in. Je kiest zelf hoe dubbele schalen worden behandeld.</p><button id="chooseImportButton" class="secondary-button" type="button">JSON-bestand kiezen</button><input id="importFileInput" type="file" accept=".json,.fms,application/json,application/vnd.fretmaster.project+json,text/json,text/plain,application/octet-stream,*/*" hidden><div id="importFileStatus" class="file-status" aria-live="polite">Nog geen bestand gekozen.</div><p class="data-note">Mobiel: kies het bestand via Bestanden, Mijn bestanden of Downloads. Ook bestanden die door de telefoon als tekstbestand of algemeen document worden herkend, worden geaccepteerd.</p></article>
+      <article class="data-action"><h3>Bestand importeren</h3><p>Lees een eerder geëxporteerd JSON-bestand in. Je kiest zelf hoe dubbele schalen worden behandeld.</p><label class="secondary-button file-picker-button">Bestand kiezen
+        <input id="importFileInput" class="native-file-input" type="file">
+      </label>
+      <div id="importFileStatus" class="file-status" aria-live="polite">Nog geen bestand gekozen.</div>
+      <details class="paste-import">
+        <summary>Alternatief: project- of JSON-tekst plakken</summary>
+        <textarea id="pasteImportText" class="project-textarea" placeholder="Open het .fms- of .json-bestand als tekst, kopieer alles en plak het hier."></textarea>
+        <button id="importPastedTextButton" class="secondary-button" type="button">Geplakte gegevens importeren</button>
+      </details>
+      <p class="data-note">De bestandskiezer heeft bewust geen typefilter. Sommige telefoons geven .fms- en .json-bestanden een onjuist of onbekend bestandstype.</p></article>
     </div>
     <div class="import-options" aria-label="Behandeling van dubbele schalen">
       <strong>Bij dubbele naam of hetzelfde schaal-ID:</strong>
@@ -216,12 +233,15 @@ const ScaleRepository=(()=>{
 /* 2. PERSISTENT STORAGE */
 const StorageService=(()=>{
   const KEYS={currentScale:'fretboardTrainer_currentScale',highScores:'fretboardTrainer_highScores',customScales:'fretboardTrainer_customScales',settings:'fretMasterStudio_settings',project:'fretMasterStudio_project',recentProjects:'fretMasterStudio_recentProjects',autoBackups:'fretMasterStudio_autoBackups'};
-  const readObject=(key,fallback)=>{try{const value=JSON.parse(localStorage.getItem(key));return value??fallback}catch{return fallback}};
-  const writeObject=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+  const memory={};
+  function getItem(key){try{return localStorage.getItem(key)}catch{return Object.prototype.hasOwnProperty.call(memory,key)?memory[key]:null}}
+  function setItem(key,value){memory[key]=String(value);try{localStorage.setItem(key,String(value));return true}catch{return false}}
+  const readObject=(key,fallback)=>{try{const value=JSON.parse(getItem(key));return value??fallback}catch{return fallback}};
+  const writeObject=(key,value)=>setItem(key,JSON.stringify(value));
   return {
     keys:()=>clone(KEYS),
-    getCurrentScale:()=>localStorage.getItem(KEYS.currentScale)||'blues',
-    setCurrentScale:id=>localStorage.setItem(KEYS.currentScale,id),
+    getCurrentScale:()=>getItem(KEYS.currentScale)||'blues',
+    setCurrentScale:id=>setItem(KEYS.currentScale,id),
     getHighScores:()=>readObject(KEYS.highScores,{}),
     setHighScores:value=>writeObject(KEYS.highScores,value&&typeof value==='object'?value:{}),
     getHighScore:id=>Number(readObject(KEYS.highScores,{})[id]||0),
@@ -425,7 +445,7 @@ const FileCompatibility=(()=>{
     input.value='';
     input.click();
   }
-  return {readAsText,readJson,choose};
+  return {readAsText,readJson,parseJsonText,choose};
 })();
 
 
@@ -436,6 +456,7 @@ const ProjectManager=(()=>{
   const fileInput=document.getElementById('projectFileInput');
   const nameDisplay=document.getElementById('currentProjectName');
   const dirtyBadge=document.getElementById('projectDirtyBadge');
+  const projectFileStatus=document.getElementById('projectFileStatus');
   const fields={
     name:document.getElementById('projectNameInput'),
     author:document.getElementById('projectAuthorInput'),
@@ -451,13 +472,13 @@ const ProjectManager=(()=>{
   const formatDate=value=>{if(!value)return '—';try{return new Date(value).toLocaleString('nl-NL')}catch{return value}};
   function defaultMeta(){
     const stamp=now();
-    return {format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.2',projectId:`project-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,name:'Naamloos project',author:'',description:'',created:stamp,modified:stamp};
+    return {format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.3',projectId:`project-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,name:'Naamloos project',author:'',description:'',created:stamp,modified:stamp};
   }
   function payload(){
     return {
       format:'FMS',
       formatVersion:FORMAT_VERSION,
-      appVersion:'3.2.2',
+      appVersion:'3.2.3',
       project:{...meta,modified:now()},
       data:{
         customScales:ScaleRepository.getCustom(),
@@ -494,7 +515,7 @@ const ProjectManager=(()=>{
       const trimmed=entered.trim();
       if(trimmed)meta.name=trimmed;
     }
-    meta.modified=now();meta.appVersion='3.2.2';
+    meta.modified=now();meta.appVersion='3.2.3';
     saveMeta();addRecent();
     download(`${cleanFilename(meta.name)}.fms`,JSON.stringify(payload(),null,2));
     setDirty(false);
@@ -537,7 +558,7 @@ const ProjectManager=(()=>{
     StorageService.setHighScores(pack.data.highScores||{});
     StorageService.setSettings(pack.data.settings||{});
     StorageService.setCurrentScale(pack.data.currentScale||'blues');
-    meta={...defaultMeta(),...pack.project,format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.2',modified:now()};
+    meta={...defaultMeta(),...pack.project,format:'FMS',formatVersion:FORMAT_VERSION,appVersion:'3.2.3',modified:now()};
     saveMeta();addRecent();setDirty(false);lastSignature='';
     UIController.refreshAfterImport();
   }
@@ -570,11 +591,17 @@ const ProjectManager=(()=>{
     backupTimer=setInterval(()=>autosnapshot(false),10000);
     window.addEventListener('beforeunload',()=>autosnapshot(false));
     document.getElementById('newProjectButton').addEventListener('click',newProject);
-    document.getElementById('openProjectButton').addEventListener('click',()=>FileCompatibility.choose(fileInput));
     document.getElementById('saveProjectButton').addEventListener('click',()=>save(false));
     document.getElementById('saveAsProjectButton').addEventListener('click',()=>save(true));
     document.getElementById('projectInfoButton').addEventListener('click',openInfo);
-    fileInput.addEventListener('change',async()=>{const file=fileInput.files?.[0];if(!file)return;try{Toast.show(`Project openen: ${file.name}`);await openFile(file)}catch(error){Toast.show(error.message)}finally{fileInput.value=''}});
+    fileInput.addEventListener('change',async()=>{
+      const file=fileInput.files&&fileInput.files[0];
+      if(!file){projectFileStatus.textContent='Geen bestand ontvangen van de bestandskiezer.';return}
+      projectFileStatus.textContent=`Bezig met openen: ${file.name} (${file.size} bytes)`;
+      try{await openFile(file);projectFileStatus.textContent=`Geopend: ${file.name}`}
+      catch(error){projectFileStatus.textContent=error.message;Toast.show(error.message)}
+      finally{fileInput.value=''}
+    });
     document.getElementById('closeProjectModalButton').addEventListener('click',closeInfo);
     document.getElementById('cancelProjectInfoButton').addEventListener('click',closeInfo);
     document.getElementById('applyProjectInfoButton').addEventListener('click',applyInfo);
@@ -608,7 +635,7 @@ const DataManager=(()=>{
       format:includeAll?'full-backup':'scales-only',
       schemaVersion:1,
       createdAt:new Date().toISOString(),
-      appVersion:'3.2.2',
+      appVersion:'3.2.3',
       project:ProjectManager.getMeta(),
       customScales:ScaleRepository.getCustom(),
       ...(includeAll?{
@@ -689,14 +716,18 @@ const DataManager=(()=>{
     }
     return {added,replaced,invalid:incoming.length-valid.length};
   }
-  async function readFile(file){
-    let data;
-    try{data=await FileCompatibility.readJson(file)}catch(error){throw new Error(`Het gekozen bestand is geen geldige JSON-back-up. ${error.message}`)}
+  function importData(data){
     const mode=document.querySelector('input[name="importConflict"]:checked')?.value||'copy';
     const result=importPackage(data,mode);
     ScaleRepository.reload();
     UIController.refreshAfterImport();
+    ProjectManager.markChanged();
     return result;
+  }
+  async function readFile(file){
+    let data;
+    try{data=await FileCompatibility.readJson(file)}catch(error){throw new Error(`Het gekozen bestand kon niet worden gelezen. ${error.message}`)}
+    return importData(data);
   }
   function embeddedRestoreScript(payload){
     const backupId=`${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -721,19 +752,29 @@ const DataManager=(()=>{
   document.getElementById('exportScalesButton').addEventListener('click',exportScales);
   document.getElementById('backupDataButton').addEventListener('click',backup);
   document.getElementById('exportHtmlButton').addEventListener('click',()=>{try{exportPersonalHtml()}catch(error){Toast.show(error.message)}});
-  document.getElementById('chooseImportButton').addEventListener('click',()=>FileCompatibility.choose(fileInput));
   fileInput.addEventListener('change',async()=>{
-    const file=fileInput.files?.[0];
-    if(!file)return;
-    status.textContent=`Bezig met importeren: ${file.name}`;
+    const file=fileInput.files&&fileInput.files[0];
+    if(!file){status.textContent='Geen bestand ontvangen van de bestandskiezer.';return}
+    status.textContent=`Bezig met importeren: ${file.name} (${file.size} bytes)`;
     try{
       const result=await readFile(file);
       status.textContent=`Klaar: ${result.added} toegevoegd, ${result.replaced} overschreven${result.invalid?`, ${result.invalid} overgeslagen`:''}.`;
       Toast.show('Import voltooid.');
     }catch(error){
       status.textContent=error.message;
-      Toast.show('Importeren is niet gelukt.');
+      Toast.show(error.message);
     }finally{fileInput.value=''}
+  });
+  document.getElementById('importPastedTextButton').addEventListener('click',()=>{
+    try{
+      const data=FileCompatibility.parseJsonText(document.getElementById('pasteImportText').value);
+      const result=importData(data);
+      status.textContent=`Klaar: ${result.added} toegevoegd, ${result.replaced} overschreven${result.invalid?`, ${result.invalid} overgeslagen`:''}.`;
+      Toast.show('Geplakte gegevens zijn geïmporteerd.');
+    }catch(error){
+      status.textContent=error.message;
+      Toast.show(error.message);
+    }
   });
   document.getElementById('closeDataButton').addEventListener('click',close);
   modal.addEventListener('click',event=>{if(event.target===modal)close()});
