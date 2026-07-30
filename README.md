@@ -54,3 +54,11 @@ of learning the circular interval structure itself.
   - purple: Voltooid
   - green/red: temporary answer feedback
 - Landscape phone layouts retain all five cards on one row.
+
+
+## Sprint 5.0.5 visual refinements
+
+- Rotated the fretboard wood grain so it runs from left to right.
+- Added a viewport-wide green/red answer flash that remains visible when the
+  app occupies almost the complete mobile screen.
+- Added a bright matching inset border during answer feedback for extra clarity.

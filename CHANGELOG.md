@@ -1,6 +1,13 @@
 
 # Changelog
 
+## 4.0.1 Alpha 1 — Sprint 5.0.5
+
+- Changed the fretboard grain direction from vertical to horizontal.
+- Added a full-screen translucent feedback layer for correct and incorrect answers.
+- Strengthened green/red feedback on mobile with a bright viewport border.
+- Preserved the existing desktop body-color feedback and status-card colors.
+
 ## 4.0.1 Alpha 1 — Sprint 5.0.4
 
 - Placed Status in the same five-column dashboard row as Performance, Correct,
