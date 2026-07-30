@@ -8,7 +8,8 @@ export default class SettingsManager {
         this.settings = {
             activeScaleId: "blues",
             questionsPerRound: 30,
-            randomStartPerRound: true
+            randomStartPerRound: true,
+            handedness: "left"
         };
     }
 

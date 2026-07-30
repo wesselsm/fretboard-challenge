@@ -4,6 +4,7 @@ export const Events = Object.freeze({
     REPOSITORY_CHANGED: "repository:changed",
     SETTINGS_CHANGED: "settings:changed",
     RANDOM_START_CHANGED: "random-start:changed",
+    HANDEDNESS_CHANGED: "handedness:changed",
 
     TRAINER_START_REQUESTED: "trainer:start-requested",
     TRAINER_STOP_REQUESTED: "trainer:stop-requested",

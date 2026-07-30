@@ -9,9 +9,16 @@ export default class FretboardView {
         this.patternColumns = patternColumns;
         this.pattern = [];
         this.target = null;
+        this.handedness = "left";
     }
 
     initialize() {
+        this.render();
+    }
+
+    setHandedness(handedness) {
+        this.handedness = handedness === "right" ? "right" : "left";
+        this.element.dataset.handedness = this.handedness;
         this.render();
     }
 
@@ -43,7 +50,16 @@ export default class FretboardView {
             );
 
         rows.forEach((row, stringIndex) => {
-            row.forEach((cellCode, columnIndex) => {
+            const visibleCells = row.map((cellCode, columnIndex) => ({
+                cellCode,
+                columnIndex
+            }));
+
+            if (this.handedness === "right") {
+                visibleCells.reverse();
+            }
+
+            visibleCells.forEach(({ cellCode, columnIndex }) => {
                 const cell = document.createElement("div");
                 cell.className = `fret string${stringIndex}`;
                 cell.dataset.string = String(stringIndex);

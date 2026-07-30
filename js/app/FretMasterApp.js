@@ -60,6 +60,7 @@ export default class FretMasterApp {
         this.unsubscribe.push(
             this.events.on(Events.TRAINER_RESTART_REQUESTED, () => this.trainer.start()),
             this.events.on(Events.RANDOM_START_CHANGED, (enabled) => this.setRandomStart(enabled)),
+            this.events.on(Events.HANDEDNESS_CHANGED, (handedness) => this.setHandedness(handedness)),
             this.events.on(Events.TRAINER_STOP_REQUESTED, () => this.trainer.stop()),
             this.events.on(Events.ANSWER_SELECTED, (answer) => this.trainer.answer(answer)),
             this.events.on(Events.SCALE_SELECTED, (id) => this.selectScale(id)),
@@ -111,6 +112,17 @@ export default class FretMasterApp {
         const value = Boolean(enabled);
         await this.settings.set("randomStartPerRound", value);
         this.exercise?.setRandomStart(value);
+    }
+
+    async setHandedness(handedness) {
+        const value = handedness === "right" ? "right" : "left";
+
+        if (this.trainer.getState().status === "running") {
+            this.trainer.stop();
+        }
+
+        await this.settings.set("handedness", value);
+        this.view.setHandedness(value);
     }
 
     async createScale({ sourceId, name }) {

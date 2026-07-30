@@ -1,6 +1,15 @@
 
 # Changelog
 
+## 4.0.1 Alpha 1 — Sprint 5.1.0
+
+- Added Linkshandig/Rechtshandig fretboard selection.
+- Mirrored the visible pattern horizontally for right-handed mode.
+- Preserved exact target positions and interval answers after mirroring.
+- Persisted the selected orientation in application settings.
+- Updated subtitle and accessibility label to match the active orientation.
+- Disabled orientation changes during an active round.
+
 ## 4.0.1 Alpha 1 — Sprint 5.0.6
 
 - Forced every interval answer set onto one row, including custom scales.

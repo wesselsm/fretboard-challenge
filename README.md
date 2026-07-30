@@ -71,3 +71,13 @@ of learning the circular interval structure itself.
 - Correct/incorrect feedback was shortened from 250 ms to 90 ms.
 - The expensive full-viewport overlay was replaced by a lightweight app-shell flash.
 - Feedback timers no longer stack when answers are entered quickly.
+
+
+## Sprint 5.1.0 left/right-handed fretboard
+
+- Added a persistent Fretboard selector with Linkshandig and Rechtshandig.
+- Right-handed mode mirrors the complete 16-column pattern horizontally.
+- Question markers remain attached to the correct interval after mirroring.
+- Random round offsets work identically in both orientations.
+- The selector is locked while a round is running to avoid accidental changes.
+- The selected orientation is restored on the next visit.

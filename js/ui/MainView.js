@@ -25,13 +25,14 @@ export default class MainView {
         this.scales = structuredClone(scales);
         this.activeScaleId = settings.activeScaleId;
         this.randomStartPerRound = settings.randomStartPerRound !== false;
+        this.handedness = settings.handedness === "right" ? "right" : "left";
 
         this.rootElement.innerHTML = `
             <main class="app-shell">
                 <header class="app-shell__header">
                     <div>
                         <h1>${this.config.appName}</h1>
-                        <p>Linkshandige diagonale patroontrainer</p>
+                        <p id="trainerSubtitle">Linkshandige diagonale patroontrainer</p>
                     </div>
                     <span class="app-shell__version">${this.config.version}</span>
                 </header>
@@ -39,6 +40,12 @@ export default class MainView {
                 <section class="controls">
                     <label>Actief patroon
                         <select id="scaleSelect"></select>
+                    </label>
+                    <label>Fretboard
+                        <select id="handednessSelect">
+                            <option value="left">Linkshandig</option>
+                            <option value="right">Rechtshandig</option>
+                        </select>
                     </label>
                     <button id="libraryButton" class="secondary-button" type="button">☰ Schaalbibliotheek</button>
 <button id="statisticsButton" class="secondary-button" type="button">▦ Statistieken</button>
@@ -63,7 +70,7 @@ export default class MainView {
 
                 <div class="pattern-scroll">
                     <div id="fretboard" class="fretboard" role="img"
-                        aria-label="Linkshandig diagonaal gitaarpatroon met zes snaren en zestien abstracte posities"></div>
+                        aria-label="Diagonaal gitaarpatroon met zes snaren en zestien abstracte posities"></div>
                 </div>
 
                 <div id="answers" class="answers"></div>
@@ -210,6 +217,7 @@ export default class MainView {
             this.config.trainer
         );
         this.fretboard.initialize();
+        this.setHandedness(this.handedness);
         this.statisticsChart = new StatisticsChart(
             this.rootElement.querySelector("#statisticsTrendChart")
         );
@@ -224,6 +232,19 @@ export default class MainView {
                 this.eventBus.emit(
                     Events.RANDOM_START_CHANGED,
                     event.target.checked
+                )
+            );
+        }
+
+        const handednessSelect =
+            this.rootElement.querySelector("#handednessSelect");
+
+        if (handednessSelect) {
+            handednessSelect.value = this.handedness;
+            handednessSelect.addEventListener("change", (event) =>
+                this.eventBus.emit(
+                    Events.HANDEDNESS_CHANGED,
+                    event.target.value
                 )
             );
         }
@@ -889,6 +910,32 @@ export default class MainView {
         this.renderLibrary();
     }
 
+    setHandedness(handedness) {
+        this.handedness = handedness === "right" ? "right" : "left";
+        this.fretboard?.setHandedness(this.handedness);
+
+        const select = this.rootElement.querySelector("#handednessSelect");
+        if (select) {
+            select.value = this.handedness;
+        }
+
+        const subtitle = this.rootElement.querySelector("#trainerSubtitle");
+        if (subtitle) {
+            subtitle.textContent = this.handedness === "right"
+                ? "Rechtshandige diagonale patroontrainer"
+                : "Linkshandige diagonale patroontrainer";
+        }
+
+        const board = this.rootElement.querySelector("#fretboard");
+        if (board) {
+            board.setAttribute(
+                "aria-label",
+                `${this.handedness === "right" ? "Rechtshandig" : "Linkshandig"} ` +
+                "diagonaal gitaarpatroon met zes snaren en zestien abstracte posities"
+            );
+        }
+    }
+
     renderExercise({ scale, answerOptions }) {
         this.setScale(scale);
         this.fretboard.clearTarget();
@@ -989,6 +1036,7 @@ export default class MainView {
         const isRunning = state.status === "running";
         this.rootElement.querySelector("#stopButton").disabled = !isRunning;
         this.rootElement.querySelector("#restartButton").disabled = isRunning;
+        this.rootElement.querySelector("#handednessSelect").disabled = isRunning;
 
         if (updateStatus) {
             const statusMap = {
