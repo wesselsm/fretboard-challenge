@@ -23,3 +23,11 @@ of learning the circular interval structure itself.
   confirming that the element existed.
 - Added defensive DOM initialization.
 - The random cyclic start feature is otherwise unchanged.
+
+
+## Sprint 5.0.2 target-marker fix
+
+- Restored the circle that marks the position to identify.
+- The shifted fretboard is now rendered once when a round starts.
+- Routine score/status updates no longer redraw the complete fretboard and
+  therefore no longer erase the active target marker.

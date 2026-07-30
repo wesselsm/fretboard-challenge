@@ -1,6 +1,13 @@
 
 # Changelog
 
+## 4.0.1 Alpha 1 — Sprint 5.0.2
+
+- Fixed the missing target circle during training.
+- Moved shifted-pattern rendering to the round-start handler.
+- Prevented general state updates from clearing the current target marker.
+- Preserved random cyclic starting positions and all Sprint 5.0.1 fixes.
+
 ## 4.0.1 Alpha 1 — Sprint 5.0.1
 
 - Fixed `Cannot set properties of null (setting 'checked')` during startup.

@@ -315,7 +315,7 @@ export default class MainView {
             this.eventBus.on(Events.EXERCISE_CHANGED, (payload) => this.renderExercise(payload)),
             this.eventBus.on(Events.QUESTION_CHANGED, (payload) => this.renderQuestion(payload)),
             this.eventBus.on(Events.QUESTION_ANSWERED, ({ result, state }) => this.renderAnswer(result, state)),
-            this.eventBus.on(Events.ROUND_STARTED, (state) => this.renderState(state)),
+            this.eventBus.on(Events.ROUND_STARTED, (state) => this.renderRoundStarted(state)),
             this.eventBus.on(Events.ROUND_STOPPED, (state) => this.renderStopped(state)),
             this.eventBus.on(Events.ROUND_FINISHED, (state) => this.renderFinished(state)),
             this.eventBus.on(Events.STATISTICS_CHANGED, (dashboard) => {
@@ -931,11 +931,15 @@ export default class MainView {
         this.renderState(state, false);
     }
 
-    renderState(state, updateStatus = true) {
-        if (state.status === "running" && state.roundPattern) {
+    renderRoundStarted(state) {
+        if (state.roundPattern) {
             this.fretboard.setPattern(state.roundPattern);
         }
 
+        this.renderState(state);
+    }
+
+    renderState(state, updateStatus = true) {
         this.rootElement.querySelector("#score").textContent = state.score;
         this.rootElement.querySelector("#correct").textContent = state.correct;
         this.rootElement.querySelector("#question").textContent =
