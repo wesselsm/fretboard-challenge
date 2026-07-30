@@ -33,6 +33,7 @@ export default class Trainer {
     stop() {
         if (this.status !== "running") return;
         this.status = "stopped";
+        this.finishedAt = performance.now();
         this.currentQuestion = null;
         this.eventBus.emit(Events.ROUND_STOPPED, this.getState());
     }
@@ -101,6 +102,18 @@ export default class Trainer {
         this.roundOffset = 0;
     }
 
+    #getElapsedMilliseconds() {
+        if (!Number.isFinite(this.startedAt)) {
+            return 0;
+        }
+
+        const end = Number.isFinite(this.finishedAt)
+            ? this.finishedAt
+            : performance.now();
+
+        return Math.max(0, Math.round(end - this.startedAt));
+    }
+
     getState() {
         return {
             status: this.status,
@@ -114,7 +127,9 @@ export default class Trainer {
             roundPattern: this.roundPattern
                 ? structuredClone(this.roundPattern)
                 : null,
-            roundOffset: this.roundOffset
+            roundOffset: this.roundOffset,
+            startedAt: this.startedAt,
+            elapsedMilliseconds: this.#getElapsedMilliseconds()
         };
     }
 }

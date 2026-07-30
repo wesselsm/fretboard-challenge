@@ -1,6 +1,15 @@
 
 # Changelog
 
+## 4.0.1 Alpha 1 — Sprint 5.0.3
+
+- Removed base-score and time-factor details from the player result screen.
+- Removed the visible score-formula explanation.
+- Disabled “Nieuwe ronde” while training is active.
+- Re-enabled “Nieuwe ronde” after stopping or finishing.
+- Added a continuously updating elapsed-time display in `mm:ss`.
+- Preserved the final elapsed time after a round stops or finishes.
+
 ## 4.0.1 Alpha 1 — Sprint 5.0.2
 
 - Fixed the missing target circle during training.

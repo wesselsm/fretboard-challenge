@@ -31,3 +31,13 @@ of learning the circular interval structure itself.
 - The shifted fretboard is now rendered once when a round starts.
 - Routine score/status updates no longer redraw the complete fretboard and
   therefore no longer erase the active target marker.
+
+
+## Sprint 5.0.3 training-flow refinements
+
+- The result screen now shows only player-relevant results; the base-score
+  calculation and time factor are hidden.
+- **Nieuwe ronde** is disabled while a round is running.
+- The button becomes available again after **Stop** or after completing the round.
+- A live `mm:ss` elapsed-time display is shown throughout the round.
+- The timer stops at the exact moment the round is stopped or completed.

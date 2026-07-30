@@ -16,6 +16,8 @@ export default class MainView {
         this.statisticsChart = null;
         this.statisticsDashboard = null;
         this.statisticsFilter = { scaleId: "all", range: "20", metric: "score" };
+        this.roundTimerId = null;
+        this.roundStartedAt = null;
     }
 
     initialize(scales, settings) {
@@ -51,6 +53,7 @@ export default class MainView {
                     <article class="status-card"><span class="status-card__label">Performance</span><strong id="score">0</strong></article>
                     <article class="status-card"><span class="status-card__label">Correct</span><strong id="correct">0</strong></article>
                     <article class="status-card"><span class="status-card__label">Vraag</span><strong><span id="question">0</span> / ${this.config.trainer.questionsPerRound}</strong></article>
+                    <article class="status-card"><span class="status-card__label">Tijd</span><strong id="elapsedTime">00:00</strong></article>
                     <article class="status-card"><span class="status-card__label">Status</span><strong id="status">Klaar</strong></article>
                 </section>
 
@@ -936,6 +939,7 @@ export default class MainView {
             this.fretboard.setPattern(state.roundPattern);
         }
 
+        this.startRoundTimer(state.startedAt);
         this.renderState(state);
     }
 
@@ -944,7 +948,9 @@ export default class MainView {
         this.rootElement.querySelector("#correct").textContent = state.correct;
         this.rootElement.querySelector("#question").textContent =
             Math.min(state.answered + (state.status === "running" ? 1 : 0), state.questionsPerRound);
-        this.rootElement.querySelector("#stopButton").disabled = state.status !== "running";
+        const isRunning = state.status === "running";
+        this.rootElement.querySelector("#stopButton").disabled = !isRunning;
+        this.rootElement.querySelector("#restartButton").disabled = isRunning;
 
         if (updateStatus) {
             this.rootElement.querySelector("#status").textContent =
@@ -952,7 +958,55 @@ export default class MainView {
         }
     }
 
+    startRoundTimer(startedAt) {
+        this.clearRoundTimer();
+        this.roundStartedAt = Number.isFinite(startedAt)
+            ? startedAt
+            : performance.now();
+        this.updateElapsedTime();
+
+        this.roundTimerId = window.setInterval(
+            () => this.updateElapsedTime(),
+            100
+        );
+    }
+
+    stopRoundTimer(elapsedMilliseconds = null) {
+        this.clearRoundTimer();
+
+        if (Number.isFinite(elapsedMilliseconds)) {
+            this.showElapsedTime(elapsedMilliseconds);
+        }
+    }
+
+    clearRoundTimer() {
+        if (this.roundTimerId !== null) {
+            window.clearInterval(this.roundTimerId);
+            this.roundTimerId = null;
+        }
+    }
+
+    updateElapsedTime() {
+        if (!Number.isFinite(this.roundStartedAt)) {
+            return;
+        }
+
+        this.showElapsedTime(performance.now() - this.roundStartedAt);
+    }
+
+    showElapsedTime(milliseconds) {
+        const element = this.rootElement.querySelector("#elapsedTime");
+        if (!element) return;
+
+        const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        element.textContent =
+            `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
     renderStopped(state) {
+        this.stopRoundTimer(state.elapsedMilliseconds);
         this.renderState(state);
         this.fretboard.clearTarget();
         this.rootElement.querySelector("#prompt").textContent = "Ronde gestopt.";
@@ -960,6 +1014,7 @@ export default class MainView {
     }
 
     renderFinished(state) {
+        this.stopRoundTimer(state.elapsedMilliseconds);
         this.renderState(state);
         this.fretboard.clearTarget();
         this.rootElement.querySelector("#answers").innerHTML = "";
@@ -975,14 +1030,7 @@ export default class MainView {
                 <div class="result-item"><span>Correct</span><strong>${summary.correct} / ${summary.questions}</strong></div>
                 <div class="result-item"><span>Nauwkeurigheid</span><strong>${summary.accuracy}%</strong></div>
                 <div class="result-item"><span>Gemiddelde tijd</span><strong>${(summary.averageMilliseconds / 1000).toFixed(2)} s</strong></div>
-                <div class="result-item"><span>Basisscore</span><strong>${summary.baseScore}</strong></div>
-                <div class="result-item"><span>Tijdfactor</span><strong>× ${summary.timeFactor.toFixed(2)}</strong></div>
             </div>
-            <p class="score-explanation">
-                Eindscore = nauwkeurigheidsscore × tijdfactor. Bij dezelfde
-                nauwkeurigheid levert een lagere gemiddelde reactietijd altijd
-                een hogere score op.
-            </p>
         `;
     }
 
