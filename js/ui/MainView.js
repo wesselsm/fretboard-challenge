@@ -18,6 +18,7 @@ export default class MainView {
         this.statisticsFilter = { scaleId: "all", range: "20", metric: "score" };
         this.roundTimerId = null;
         this.roundStartedAt = null;
+        this.feedbackTimerId = null;
     }
 
     initialize(scales, settings) {
@@ -924,10 +925,17 @@ export default class MainView {
     }
 
     renderAnswer(result, state) {
+        if (this.feedbackTimerId !== null) {
+            window.clearTimeout(this.feedbackTimerId);
+        }
+
         document.body.classList.remove("correct", "wrong");
         document.body.classList.add(result.isCorrect ? "correct" : "wrong");
-        setTimeout(() => document.body.classList.remove("correct", "wrong"),
-            this.config.trainer.answerDelay);
+
+        this.feedbackTimerId = window.setTimeout(() => {
+            document.body.classList.remove("correct", "wrong");
+            this.feedbackTimerId = null;
+        }, this.config.trainer.answerDelay);
 
         this.setStatus(
             result.isCorrect ? "correct" : "wrong",

@@ -62,3 +62,12 @@ of learning the circular interval structure itself.
 - Added a viewport-wide green/red answer flash that remains visible when the
   app occupies almost the complete mobile screen.
 - Added a bright matching inset border during answer feedback for extra clarity.
+
+
+## Sprint 5.0.6 compact answers and faster feedback
+
+- All interval buttons remain on one horizontal row for built-in and custom scales.
+- Mobile button text and spacing scale down automatically to fit the available width.
+- Correct/incorrect feedback was shortened from 250 ms to 90 ms.
+- The expensive full-viewport overlay was replaced by a lightweight app-shell flash.
+- Feedback timers no longer stack when answers are entered quickly.

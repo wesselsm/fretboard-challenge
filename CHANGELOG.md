@@ -1,6 +1,14 @@
 
 # Changelog
 
+## 4.0.1 Alpha 1 — Sprint 5.0.6
+
+- Forced every interval answer set onto one row, including custom scales.
+- Added responsive button sizing for narrow mobile screens.
+- Reduced visual answer feedback to 90 ms.
+- Replaced the full-screen overlay with a lightweight shell flash.
+- Prevented overlapping feedback timers during rapid play.
+
 ## 4.0.1 Alpha 1 — Sprint 5.0.5
 
 - Changed the fretboard grain direction from vertical to horizontal.
