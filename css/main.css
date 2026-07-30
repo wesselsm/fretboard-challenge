@@ -118,13 +118,22 @@ button:disabled{cursor:default;opacity:.48;filter:saturate(.35)}
 @media(max-width:700px){
     body{padding:5px}
     .app-shell{padding:9px;border-radius:11px}
+    .pattern-scroll{overflow-x:hidden}
     .app-shell__header{flex-direction:column}
     .dashboard{gap:4px}
     .status-card{padding:6px;text-align:center}
     .status-card strong{font-size:16px}
     .answers{position:sticky;bottom:0;grid-template-columns:repeat(min(var(--answer-count,6),6),1fr);padding:5px;background:rgba(25,27,31,.98)}
     .answers button{min-height:38px;padding:3px;font-size:14px}
-    .fretboard{grid-template-rows:repeat(6,clamp(20px,6vw,26px));margin-bottom:5px;border-width:3px;border-radius:7px}
+    .fretboard{
+        min-width:0;
+        width:100%;
+        grid-template-columns:repeat(16,minmax(0,1fr));
+        grid-template-rows:repeat(6,clamp(20px,6vw,26px));
+        margin-bottom:5px;
+        border-width:3px;
+        border-radius:7px
+    }
     .fret{border-right-width:2px}
     .fret::before{left:-2px;right:-2px}
     .string5::before{height:4px}
@@ -569,4 +578,23 @@ body.modal-open{overflow:hidden}
 @media(max-width:680px){
     .statistics-controls{grid-template-columns:1fr}
     .statistics-chart{height:235px}
+}
+
+
+@media(max-width:950px) and (orientation:landscape) and (max-height:520px){
+    body{padding:3px}
+    .app-shell{padding:7px}
+    .app-shell__header{margin-bottom:7px}
+    .controls{margin-bottom:6px}
+    .dashboard{margin-bottom:6px}
+    .scale-title{margin:5px 0}
+    .question-text{margin:5px 0}
+    .pattern-scroll{overflow-x:hidden}
+    .fretboard{
+        min-width:0;
+        width:100%;
+        grid-template-columns:repeat(16,minmax(0,1fr));
+        grid-template-rows:repeat(6,20px);
+        margin-bottom:3px
+    }
 }

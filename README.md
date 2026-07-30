@@ -29,3 +29,11 @@ The application compares the first and second half of the selected rounds and
 shows whether the chosen metric improved, declined or remained stable.
 
 For response time, a lower time is treated as an improvement.
+
+
+## Sprint 4.2.1 mobile display fix
+
+- The complete 16-position fretboard now scales to the available phone width.
+- Horizontal scrolling is no longer required during a round.
+- Landscape phone layouts use a slightly more compact fretboard height.
+- Answer buttons retain their existing mobile layout.

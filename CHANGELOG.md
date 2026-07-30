@@ -1,4 +1,13 @@
+
 # Changelog
+
+## 4.0.1 Alpha 1 — Sprint 4.2.1
+
+- Fixed the fretboard being wider than a phone screen.
+- Removed the fixed 672 px minimum width on mobile.
+- All sixteen abstract fret positions now fit within the viewport.
+- Added a compact landscape layout for phones.
+- Preserved the existing mobile answer-button layout.
 
 ## 4.0.1 Alpha 1 — Sprint 4.2
 
