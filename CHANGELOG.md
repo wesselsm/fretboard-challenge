@@ -1,4 +1,12 @@
+
 # Changelog
+
+## 4.0.1 Alpha 1 — Sprint 5.0.1
+
+- Fixed `Cannot set properties of null (setting 'checked')` during startup.
+- Ensured the random-start checkbox is present in the rendered controls.
+- Added a null-safe initialization and event binding for the checkbox.
+- Preserved all Sprint 5.0 functionality.
 
 ## 4.0.1 Alpha 1 — Sprint 5.0
 

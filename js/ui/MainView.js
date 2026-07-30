@@ -39,6 +39,10 @@ export default class MainView {
                     </label>
                     <button id="libraryButton" class="secondary-button" type="button">☰ Schaalbibliotheek</button>
 <button id="statisticsButton" class="secondary-button" type="button">▦ Statistieken</button>
+                    <label class="random-start-control">
+                        <input id="randomStartCheckbox" type="checkbox">
+                        <span>Willekeurige startpositie</span>
+                    </label>
                     <button id="restartButton" type="button">↻ Nieuwe ronde</button>
                     <button id="stopButton" type="button" disabled>Stop</button>
                 </section>
@@ -207,11 +211,18 @@ export default class MainView {
         );
         this.renderScaleControls();
 
-        this.rootElement.querySelector("#randomStartCheckbox").checked =
-            this.randomStartPerRound;
-        this.rootElement.querySelector("#randomStartCheckbox").addEventListener("change", (event) =>
-            this.eventBus.emit(Events.RANDOM_START_CHANGED, event.target.checked)
-        );
+        const randomStartCheckbox =
+            this.rootElement.querySelector("#randomStartCheckbox");
+
+        if (randomStartCheckbox) {
+            randomStartCheckbox.checked = this.randomStartPerRound;
+            randomStartCheckbox.addEventListener("change", (event) =>
+                this.eventBus.emit(
+                    Events.RANDOM_START_CHANGED,
+                    event.target.checked
+                )
+            );
+        }
 
         this.rootElement.querySelector("#scaleSelect").addEventListener("change", (event) =>
             this.eventBus.emit(Events.SCALE_SELECTED, event.target.value)

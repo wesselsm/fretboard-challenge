@@ -15,3 +15,11 @@ Sprint 5.0 adds a random cyclic starting position to every new training round.
 
 This prevents users from learning fixed left-edge and right-edge answers instead
 of learning the circular interval structure itself.
+
+
+## Sprint 5.0.1 startup fix
+
+- Fixed a startup crash caused by initializing the random-start checkbox before
+  confirming that the element existed.
+- Added defensive DOM initialization.
+- The random cyclic start feature is otherwise unchanged.
