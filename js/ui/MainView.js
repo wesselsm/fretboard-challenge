@@ -909,7 +909,7 @@ export default class MainView {
             this.config.trainer.answerDelay);
 
         this.rootElement.querySelector("#status").textContent =
-            result.isCorrect ? `Goed (+${result.points})` : `Fout: ${result.question.correctAnswer}`;
+            result.isCorrect ? "Goed" : `Fout: ${result.question.correctAnswer}`;
         this.renderState(state, false);
     }
 
@@ -945,11 +945,18 @@ export default class MainView {
         panel.innerHTML = `
             <h2>Resultaat</h2>
             <div class="result-grid">
-                <div class="result-item"><span>Performance</span><strong>${summary.totalPoints}</strong></div>
+                <div class="result-item result-item--score"><span>Eindscore</span><strong>${summary.totalPoints}</strong></div>
                 <div class="result-item"><span>Correct</span><strong>${summary.correct} / ${summary.questions}</strong></div>
                 <div class="result-item"><span>Nauwkeurigheid</span><strong>${summary.accuracy}%</strong></div>
                 <div class="result-item"><span>Gemiddelde tijd</span><strong>${(summary.averageMilliseconds / 1000).toFixed(2)} s</strong></div>
+                <div class="result-item"><span>Basisscore</span><strong>${summary.baseScore}</strong></div>
+                <div class="result-item"><span>Tijdfactor</span><strong>× ${summary.timeFactor.toFixed(2)}</strong></div>
             </div>
+            <p class="score-explanation">
+                Eindscore = nauwkeurigheidsscore × tijdfactor. Bij dezelfde
+                nauwkeurigheid levert een lagere gemiddelde reactietijd altijd
+                een hogere score op.
+            </p>
         `;
     }
 

@@ -598,3 +598,23 @@ body.modal-open{overflow:hidden}
         margin-bottom:3px
     }
 }
+
+
+.result-item--score{
+    border-color:#d3ad32;
+    background:linear-gradient(180deg,rgba(255,216,77,.13),rgba(255,216,77,.04))
+}
+.result-item--score strong{
+    color:#ffe273;
+    font-size:clamp(24px,4vw,36px)
+}
+.score-explanation{
+    margin:12px 0 0;
+    padding:10px 12px;
+    color:var(--muted);
+    background:#202328;
+    border-left:3px solid #d3ad32;
+    border-radius:7px;
+    font-size:13px;
+    line-height:1.45
+}

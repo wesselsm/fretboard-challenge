@@ -41,21 +41,17 @@ export default class Trainer {
             performance.now() - this.currentQuestion.startedAt
         );
         const isCorrect = String(answer) === this.currentQuestion.correctAnswer;
-        const points = this.performanceCalculator.calculateQuestionPoints(
-            isCorrect,
-            responseMilliseconds
-        );
-
         const result = new AnswerResult({
             question: this.currentQuestion,
             answer,
             isCorrect,
-            responseMilliseconds,
-            points
+            responseMilliseconds
         });
 
         this.results.push(result);
-        this.score += points;
+        this.score = this.performanceCalculator.summarize(
+            this.results
+        ).totalPoints;
 
         this.eventBus.emit(Events.QUESTION_ANSWERED, {
             result,

@@ -57,6 +57,7 @@ export default class StatisticsRepository {
 
         const record = {
             id: crypto.randomUUID(),
+            scoringVersion: summary.scoringVersion ?? 2,
             completedAt: now,
             scaleId: scale.id,
             scaleName: scale.name,
