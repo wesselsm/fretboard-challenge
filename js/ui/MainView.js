@@ -30,11 +30,16 @@ export default class MainView {
         this.rootElement.innerHTML = `
             <main class="app-shell">
                 <header class="app-shell__header">
-                    <div>
-                        <h1>${this.config.appName}</h1>
-                        <p id="trainerSubtitle">Linkshandige diagonale patroontrainer</p>
+                    <div class="brand-lockup">
+                        <img class="brand-logo" src="assets/logo/guitar-neck-pilot-logo-dark.png" alt="Guitar Neck Pilot">
+                        <div>
+                            <p id="trainerSubtitle">Linkshandige diagonale patroontrainer</p>
+                        </div>
                     </div>
-                    <span class="app-shell__version">${this.config.version}</span>
+                    <div class="release-meta">
+                        <span class="app-shell__version">${this.config.version}</span>
+                        <button id="aboutButton" class="secondary-button about-button" type="button">Over</button>
+                    </div>
                 </header>
 
                 <section class="controls">
@@ -76,6 +81,26 @@ export default class MainView {
                 <div id="answers" class="answers"></div>
                 <section id="resultPanel" class="result-panel" hidden></section>
             </main>
+
+
+            <div id="aboutModal" class="modal-backdrop" hidden>
+                <section class="about-dialog" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+                    <header class="library-dialog__header">
+                        <div>
+                            <h2 id="aboutTitle">Over Guitar Neck Pilot</h2>
+                            <p>Pattern & Interval Trainer</p>
+                        </div>
+                        <button id="aboutCloseButton" class="icon-button" type="button" aria-label="Sluiten">×</button>
+                    </header>
+                    <img class="about-logo" src="assets/logo/guitar-neck-pilot-logo-dark.png" alt="Guitar Neck Pilot-logo">
+                    <div class="about-copy">
+                        <p><strong>Versie ${this.config.version}</strong></p>
+                        <p>Een patroon- en intervaltrainer voor gitaar, ontworpen om de gitaarhals intuïtief te leren beheersen zonder afhankelijk te worden van notennamen of vaste posities.</p>
+                        <p>Ondersteunt eigen schaalpatronen, willekeurige startposities, links- en rechtshandige weergave en lokale trainingsstatistieken.</p>
+                        <p class="about-copyright">© 2026 Martijn Wessels. Alle rechten voorbehouden.<br><span class="brand-motto">◎ Train patterns. Master the fretboard.</span></p>
+                    </div>
+                </section>
+            </div>
 
             <div id="libraryModal" class="modal-backdrop" hidden>
                 <section class="library-dialog" role="dialog" aria-modal="true" aria-labelledby="libraryTitle">
@@ -258,6 +283,11 @@ export default class MainView {
         this.rootElement.querySelector("#stopButton").addEventListener("click", () =>
             this.eventBus.emit(Events.TRAINER_STOP_REQUESTED)
         );
+        this.rootElement.querySelector("#aboutButton").addEventListener("click", () => this.openAbout());
+        this.rootElement.querySelector("#aboutCloseButton").addEventListener("click", () => this.closeAbout());
+        this.rootElement.querySelector("#aboutModal").addEventListener("click", (event) => {
+            if (event.target.id === "aboutModal") this.closeAbout();
+        });
         this.rootElement.querySelector("#libraryButton").addEventListener("click", () => this.openLibrary());
         this.rootElement.querySelector("#statisticsButton").addEventListener("click", () =>
             this.eventBus.emit(Events.STATISTICS_OPEN_REQUESTED)
@@ -356,9 +386,11 @@ export default class MainView {
         const editor = this.rootElement.querySelector("#editorModal");
         const library = this.rootElement.querySelector("#libraryModal");
         const statistics = this.rootElement.querySelector("#statisticsModal");
+        const about = this.rootElement.querySelector("#aboutModal");
         if (!editor.hidden) this.closeEditor();
         else if (!statistics.hidden) this.closeStatistics();
         else if (!library.hidden) this.closeLibrary();
+        else if (!about.hidden) this.closeAbout();
     };
 
     renderScaleControls() {
@@ -379,6 +411,22 @@ export default class MainView {
         }
     }
 
+
+    openAbout() {
+        this.rootElement.querySelector("#aboutModal").hidden = false;
+        document.body.classList.add("modal-open");
+    }
+
+    closeAbout() {
+        this.rootElement.querySelector("#aboutModal").hidden = true;
+        if (
+            this.rootElement.querySelector("#libraryModal").hidden &&
+            this.rootElement.querySelector("#editorModal").hidden &&
+            this.rootElement.querySelector("#statisticsModal").hidden
+        ) {
+            document.body.classList.remove("modal-open");
+        }
+    }
 
     openStatistics(dashboard) {
         this.renderStatistics(dashboard);

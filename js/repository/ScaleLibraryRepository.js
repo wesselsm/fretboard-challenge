@@ -141,7 +141,7 @@ export default class ScaleLibraryRepository {
 
     async importData(data) {
         if (!data || data.format !== "fretmaster-scale-library" || data.version !== 1) {
-            throw new Error("Dit is geen geldig FretMaster-schaalbibliotheekbestand.");
+            throw new Error("Dit is geen geldig Guitar Neck Pilot-schaalbibliotheekbestand.");
         }
 
         if (!Array.isArray(data.scales)) {

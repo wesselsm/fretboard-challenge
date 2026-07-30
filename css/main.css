@@ -792,3 +792,40 @@ body.wrong .app-shell{
         min-width:0
     }
 }
+
+
+.brand-lockup{display:flex;align-items:center;gap:14px;min-width:0}
+.brand-logo{display:block;width:min(520px,55vw);height:auto;max-height:110px;object-fit:contain;object-position:left center}
+.brand-lockup p{margin:2px 0 8px;color:var(--muted)}
+.release-meta{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.about-button{min-height:32px;padding:5px 10px;font-size:13px}
+.about-dialog{width:min(620px,calc(100% - 24px));max-height:calc(100vh - 36px);overflow:auto;padding:22px;background:#202328;border:1px solid var(--border);border-radius:16px}
+.about-logo{display:block;width:min(500px,100%);height:auto;margin:6px auto 18px;border-radius:10px}
+.about-copy{max-width:520px;margin:auto;color:#e7e7e7;line-height:1.55}
+.about-copy strong{color:#ffe273}
+.about-copyright{margin-top:22px;color:var(--muted);font-size:13px}
+
+@media(max-width:700px){
+    .app-shell__header{align-items:stretch}
+    .brand-lockup{display:block}
+    .brand-logo{width:min(100%,420px);max-height:72px}
+    .release-meta{justify-content:space-between}
+    .about-dialog{padding:15px}
+}
+
+
+/* Guitar Neck Pilot 1.0.0 Stable branding */
+:root{--brand-gold:#d4a84e;--brand-gold-soft:#efd28a;--brand-charcoal:#171411;--brand-cream:#efe7d4}
+body{background:radial-gradient(circle at 50% 0,#30271f 0,#171411 52%,#0f0d0b 100%)}
+.app-shell{border:1px solid rgba(212,168,78,.24);box-shadow:0 18px 60px rgba(0,0,0,.42)}
+.app-shell__header{border-bottom-color:rgba(212,168,78,.32)}
+.app-shell__version{color:var(--brand-gold-soft);font-weight:700}
+.brand-motto{display:inline-block;margin-top:8px;color:var(--brand-gold);font-style:italic}
+.splash-screen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#171411;transition:opacity .42s ease,visibility .42s ease}
+.splash-screen img{width:min(1000px,94vw);max-height:82vh;object-fit:contain;border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.splash-screen__version{margin-top:18px;color:#d4a84e;font:700 14px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.splash-screen--hidden{opacity:0;visibility:hidden;pointer-events:none}
+button:not(.icon-button),.file-button{border-color:rgba(212,168,78,.38)}
+button:not(.secondary-button):not(.danger-button):not(.icon-button){background:linear-gradient(180deg,#dfb45c,#b8862f);color:#171411}
+.target::after{box-shadow:0 0 0 3px rgba(212,168,78,.36),0 0 22px rgba(212,168,78,.8)}
+@media(max-width:700px){.splash-screen img{width:98vw;border-radius:8px}.splash-screen__version{font-size:11px}.brand-logo{width:100%;max-height:80px}}

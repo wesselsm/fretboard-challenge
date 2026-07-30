@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340">
+<rect width="1200" height="340" rx="26" fill="#ffffff"/>
+<g transform="translate(36 45)">
+<rect x="0" y="60" width="430" height="130" rx="12" fill="#eeeeee" stroke="#171411" stroke-width="4"/>
+<g stroke="#171411" stroke-width="3">
+<line x1="0" y1="78" x2="430" y2="78"/><line x1="0" y1="98" x2="430" y2="98"/><line x1="0" y1="119" x2="430" y2="119"/><line x1="0" y1="141" x2="430" y2="141"/><line x1="0" y1="164" x2="430" y2="164"/><line x1="0" y1="187" x2="430" y2="187"/>
+</g><g stroke="#171411" stroke-width="6"><line x1="86" y1="60" x2="86" y2="190"/><line x1="172" y1="60" x2="172" y2="190"/><line x1="258" y1="60" x2="258" y2="190"/><line x1="344" y1="60" x2="344" y2="190"/></g>
+<g transform="translate(300 125)" fill="none" stroke="#171411"><circle r="43" stroke-width="8"/><circle r="18" stroke-width="5"/><line x1="-61" y1="0" x2="61" y2="0" stroke-width="5"/><line x1="0" y1="-61" x2="0" y2="61" stroke-width="5"/></g>
+</g>
+<text x="505" y="132" font-family="DejaVu Sans, sans-serif" font-size="68" font-weight="700" fill="#171411">Guitar Neck <tspan fill="#171411">Pilot</tspan></text>
+<text x="510" y="192" font-family="DejaVu Sans, sans-serif" font-size="30" letter-spacing="5" fill="#444444">PATTERN &amp; INTERVAL TRAINER</text>
+<line x1="510" y1="219" x2="1125" y2="219" stroke="#888888" stroke-width="2"/>
+<text x="510" y="270" font-family="DejaVu Sans, sans-serif" font-size="30" font-style="italic" fill="#171411">Train patterns. Master the fretboard.</text>
+</svg>

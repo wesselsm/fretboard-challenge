@@ -1,83 +1,50 @@
-# FretMaster Studio 4.0.1 Alpha 1 — Sprint 5.0
+# Guitar Neck Pilot 1.0.0 Stable
 
-Sprint 5.0 adds a random cyclic starting position to every new training round.
+**Pattern & Interval Trainer**  
+*Train patterns. Master the fretboard.*
 
-## Behaviour
+Guitar Neck Pilot trains intuitive interval recognition using repeating abstract patterns on a six-string guitar neck. It deliberately avoids note names and conventional fret numbering so the player learns relationships rather than fixed locations.
 
-- The abstract interval pattern repeats after twelve semitones.
-- At the start of a round, the app selects an offset from 0 through 11.
-- The complete pattern, including all interval codes, moves together.
-- No note names or key names are introduced.
-- The visible fretboard remains sixteen positions wide.
-- Consecutive rounds do not use the same random offset.
-- The option can be disabled with **Willekeurige startpositie**.
-- The preference is stored locally.
+## Features
 
-This prevents users from learning fixed left-edge and right-edge answers instead
-of learning the circular interval structure itself.
+- Abstract diagonal interval-pattern training
+- Built-in and custom scale patterns
+- Visual Pattern Designer
+- JSON import and export
+- Random cyclic start position for each round
+- Left- and right-handed fretboard presentation
+- Fair accuracy-and-speed performance scoring
+- Local progress statistics and trend charts
+- Responsive desktop and mobile layout
+- Offline use after downloading the package
 
+## Start
 
-## Sprint 5.0.1 startup fix
+1. Extract the ZIP archive.
+2. Open `index.html` in a current browser.
+3. Choose a pattern and fretboard orientation.
+4. Keep **Willekeurige startpositie** enabled for the strongest anti-memorization training.
+5. Select **Nieuwe ronde**.
 
-- Fixed a startup crash caused by initializing the random-start checkbox before
-  confirming that the element existed.
-- Added defensive DOM initialization.
-- The random cyclic start feature is otherwise unchanged.
+All settings, custom scales and statistics are stored locally in the browser. No account or internet connection is required.
 
+## Package
 
-## Sprint 5.0.2 target-marker fix
+- `index.html`, `css/`, `js/`: application
+- `assets/`: logos, icons, splash and branding artwork
+- `docs/Guitar-Neck-Pilot-User-Manual-1.0.0.pdf`: user manual
+- `docs/Guitar-Neck-Pilot-Brand-Guide-1.0.0.pdf`: brand guide
+- `docs/RELEASE_NOTES.md`: release notes
+- `docs/REGRESSION_CHECKLIST.md`: manual validation checklist
+- `docs/AUTOMATED_TEST_REPORT.md`: automated build checks
 
-- Restored the circle that marks the position to identify.
-- The shifted fretboard is now rendered once when a round starts.
-- Routine score/status updates no longer redraw the complete fretboard and
-  therefore no longer erase the active target marker.
+## Compatibility
 
+Designed for current releases of Chrome, Edge and Firefox. Safari and mobile browsers should be checked using the included manual regression checklist before broad deployment.
 
-## Sprint 5.0.3 training-flow refinements
+## Credits
 
-- The result screen now shows only player-relevant results; the base-score
-  calculation and time factor are hidden.
-- **Nieuwe ronde** is disabled while a round is running.
-- The button becomes available again after **Stop** or after completing the round.
-- A live `mm:ss` elapsed-time display is shown throughout the round.
-- The timer stops at the exact moment the round is stopped or completed.
+Concept and product direction: Martijn Wessels  
+Software development and design assistance: OpenAI ChatGPT
 
-
-## Sprint 5.0.4 status dashboard
-
-- The status card now forms one equal dashboard row with Performance, Correct,
-  Vraag and Tijd.
-- Status uses clear color coding:
-  - gray: Gereed
-  - blue: Bezig
-  - orange: Gestopt
-  - purple: Voltooid
-  - green/red: temporary answer feedback
-- Landscape phone layouts retain all five cards on one row.
-
-
-## Sprint 5.0.5 visual refinements
-
-- Rotated the fretboard wood grain so it runs from left to right.
-- Added a viewport-wide green/red answer flash that remains visible when the
-  app occupies almost the complete mobile screen.
-- Added a bright matching inset border during answer feedback for extra clarity.
-
-
-## Sprint 5.0.6 compact answers and faster feedback
-
-- All interval buttons remain on one horizontal row for built-in and custom scales.
-- Mobile button text and spacing scale down automatically to fit the available width.
-- Correct/incorrect feedback was shortened from 250 ms to 90 ms.
-- The expensive full-viewport overlay was replaced by a lightweight app-shell flash.
-- Feedback timers no longer stack when answers are entered quickly.
-
-
-## Sprint 5.1.0 left/right-handed fretboard
-
-- Added a persistent Fretboard selector with Linkshandig and Rechtshandig.
-- Right-handed mode mirrors the complete 16-column pattern horizontally.
-- Question markers remain attached to the correct interval after mirroring.
-- Random round offsets work identically in both orientations.
-- The selector is locked while a round is running to avoid accidental changes.
-- The selected orientation is restored on the next visit.
+© 2026 Martijn Wessels. See `LICENSE.txt`.

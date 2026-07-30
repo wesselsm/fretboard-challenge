@@ -1,0 +1,10 @@
+Guitar Neck Pilot - Proprietary License Notice
+Version 1.0.0 Stable
+
+Copyright (c) 2026 Martijn Wessels. All rights reserved.
+
+This software and its accompanying artwork and documentation may be used by the copyright holder for personal, educational and evaluation purposes. Redistribution, publication, sale, sublicensing, modification for redistribution, or incorporation into another product is not permitted without prior written permission from the copyright holder.
+
+Third-party browser software and system fonts remain subject to their respective licenses.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
