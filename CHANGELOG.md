@@ -1,6 +1,15 @@
 
 # Changelog
 
+## 4.0.1 Alpha 1 — Sprint 5.0.4
+
+- Placed Status in the same five-column dashboard row as Performance, Correct,
+  Vraag and Tijd.
+- Added color-coded status states: Gereed, Bezig, Gestopt and Voltooid.
+- Added green and red temporary status feedback for correct and incorrect answers.
+- Optimized the five-card row for landscape phone displays.
+- Preserved the compact wrapped layout on narrow portrait screens.
+
 ## 4.0.1 Alpha 1 — Sprint 5.0.3
 
 - Removed base-score and time-factor details from the player result screen.

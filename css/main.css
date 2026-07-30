@@ -26,7 +26,12 @@ button:disabled{cursor:default;opacity:.48;filter:saturate(.35)}
 .controls{display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
 .controls label{display:grid;gap:5px;flex:1;color:var(--muted);font-size:12px}
 .controls select{padding:9px;color:#fff;background:#17191d;border:1px solid #555b64;border-radius:8px}
-.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:11px}
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:10px;
+    margin-bottom:12px
+}
 .status-card{display:flex;flex-direction:column;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:11px}
 .status-card__label{color:var(--muted);font-size:12px}
 .status-card strong{font-size:21px}
@@ -649,4 +654,79 @@ body.modal-open{overflow:hidden}
 
 #elapsedTime{
     font-variant-numeric:tabular-nums;
+}
+
+
+.status-card{
+    min-width:0
+}
+
+.status-card--ready{
+    border-color:#4e555e;
+    background:linear-gradient(180deg,rgba(126,136,149,.15),rgba(126,136,149,.05))
+}
+.status-card--ready strong{
+    color:#c9cfd6
+}
+
+.status-card--running{
+    border-color:#397db8;
+    background:linear-gradient(180deg,rgba(57,125,184,.18),rgba(57,125,184,.06))
+}
+.status-card--running strong{
+    color:#7fc4ff
+}
+
+.status-card--stopped{
+    border-color:#c7842f;
+    background:linear-gradient(180deg,rgba(199,132,47,.18),rgba(199,132,47,.06))
+}
+.status-card--stopped strong{
+    color:#ffbd68
+}
+
+.status-card--finished{
+    border-color:#8b64c5;
+    background:linear-gradient(180deg,rgba(139,100,197,.18),rgba(139,100,197,.06))
+}
+.status-card--finished strong{
+    color:#c9a9ff
+}
+
+.status-card--correct{
+    border-color:#3f9b62;
+    background:linear-gradient(180deg,rgba(63,155,98,.18),rgba(63,155,98,.06))
+}
+.status-card--correct strong{
+    color:#7fdda1
+}
+
+.status-card--wrong{
+    border-color:#b84e4e;
+    background:linear-gradient(180deg,rgba(184,78,78,.18),rgba(184,78,78,.06))
+}
+.status-card--wrong strong{
+    color:#ff9292
+}
+
+@media(max-width:760px){
+    .dashboard{
+        grid-template-columns:repeat(5,minmax(0,1fr));
+        gap:5px
+    }
+    .status-card{
+        padding:7px 4px
+    }
+    .status-card__label{
+        font-size:10px
+    }
+    .status-card strong{
+        font-size:clamp(14px,3.5vw,20px)
+    }
+}
+
+@media(max-width:430px) and (orientation:portrait){
+    .dashboard{
+        grid-template-columns:repeat(3,minmax(0,1fr))
+    }
 }

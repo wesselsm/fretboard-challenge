@@ -1,6 +1,6 @@
 const Config = Object.freeze({
     appName: "FretMaster Studio",
-    version: "4.0.1 Alpha 1 — Sprint 5.0.3",
+    version: "4.0.1 Alpha 1 — Sprint 5.0.4",
     storageNamespace: "fretmaster-studio",
     storageKeys: Object.freeze({
         project: "project",

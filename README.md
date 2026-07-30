@@ -41,3 +41,16 @@ of learning the circular interval structure itself.
 - The button becomes available again after **Stop** or after completing the round.
 - A live `mm:ss` elapsed-time display is shown throughout the round.
 - The timer stops at the exact moment the round is stopped or completed.
+
+
+## Sprint 5.0.4 status dashboard
+
+- The status card now forms one equal dashboard row with Performance, Correct,
+  Vraag and Tijd.
+- Status uses clear color coding:
+  - gray: Gereed
+  - blue: Bezig
+  - orange: Gestopt
+  - purple: Voltooid
+  - green/red: temporary answer feedback
+- Landscape phone layouts retain all five cards on one row.

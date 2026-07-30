@@ -54,7 +54,7 @@ export default class MainView {
                     <article class="status-card"><span class="status-card__label">Correct</span><strong id="correct">0</strong></article>
                     <article class="status-card"><span class="status-card__label">Vraag</span><strong><span id="question">0</span> / ${this.config.trainer.questionsPerRound}</strong></article>
                     <article class="status-card"><span class="status-card__label">Tijd</span><strong id="elapsedTime">00:00</strong></article>
-                    <article class="status-card"><span class="status-card__label">Status</span><strong id="status">Klaar</strong></article>
+                    <article id="statusCard" class="status-card status-card--ready"><span class="status-card__label">Status</span><strong id="status">Gereed</strong></article>
                 </section>
 
                 <h2 id="scaleTitle" class="scale-title">Interval Trainer</h2>
@@ -894,7 +894,7 @@ export default class MainView {
         this.renderAnswerButtons(answerOptions, false);
         this.rootElement.querySelector("#prompt").textContent =
             "Klik op “Nieuwe ronde” om met deze schaal te beginnen.";
-        this.rootElement.querySelector("#status").textContent = "Klaar";
+        this.setStatus("ready");
         this.rootElement.querySelector("#resultPanel").hidden = true;
     }
 
@@ -929,9 +929,39 @@ export default class MainView {
         setTimeout(() => document.body.classList.remove("correct", "wrong"),
             this.config.trainer.answerDelay);
 
-        this.rootElement.querySelector("#status").textContent =
-            result.isCorrect ? "Goed" : `Fout: ${result.question.correctAnswer}`;
+        this.setStatus(
+            result.isCorrect ? "correct" : "wrong",
+            result.isCorrect ? "Goed" : `Fout: ${result.question.correctAnswer}`
+        );
         this.renderState(state, false);
+    }
+
+    setStatus(status, text = null) {
+        const card = this.rootElement.querySelector("#statusCard");
+        const value = this.rootElement.querySelector("#status");
+
+        const labels = {
+            ready: "Gereed",
+            running: "Bezig",
+            stopped: "Gestopt",
+            finished: "Voltooid"
+        };
+
+        if (value) {
+            value.textContent = text ?? labels[status] ?? labels.ready;
+        }
+
+        if (card) {
+            card.classList.remove(
+                "status-card--ready",
+                "status-card--running",
+                "status-card--stopped",
+                "status-card--finished",
+                "status-card--correct",
+                "status-card--wrong"
+            );
+            card.classList.add(`status-card--${status}`);
+        }
     }
 
     renderRoundStarted(state) {
@@ -953,8 +983,13 @@ export default class MainView {
         this.rootElement.querySelector("#restartButton").disabled = isRunning;
 
         if (updateStatus) {
-            this.rootElement.querySelector("#status").textContent =
-                state.status === "running" ? "Bezig" : "Klaar";
+            const statusMap = {
+                running: "running",
+                stopped: "stopped",
+                finished: "finished",
+                idle: "ready"
+            };
+            this.setStatus(statusMap[state.status] ?? "ready");
         }
     }
 
@@ -1007,7 +1042,8 @@ export default class MainView {
 
     renderStopped(state) {
         this.stopRoundTimer(state.elapsedMilliseconds);
-        this.renderState(state);
+        this.renderState(state, false);
+        this.setStatus("stopped");
         this.fretboard.clearTarget();
         this.rootElement.querySelector("#prompt").textContent = "Ronde gestopt.";
         this.rootElement.querySelector("#answers").innerHTML = "";
@@ -1015,7 +1051,8 @@ export default class MainView {
 
     renderFinished(state) {
         this.stopRoundTimer(state.elapsedMilliseconds);
-        this.renderState(state);
+        this.renderState(state, false);
+        this.setStatus("finished");
         this.fretboard.clearTarget();
         this.rootElement.querySelector("#answers").innerHTML = "";
         this.rootElement.querySelector("#prompt").textContent = "Ronde voltooid.";
