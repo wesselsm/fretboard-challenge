@@ -59,6 +59,7 @@ export default class FretMasterApp {
 
         this.unsubscribe.push(
             this.events.on(Events.TRAINER_RESTART_REQUESTED, () => this.trainer.start()),
+            this.events.on(Events.RANDOM_START_CHANGED, (enabled) => this.setRandomStart(enabled)),
             this.events.on(Events.TRAINER_STOP_REQUESTED, () => this.trainer.stop()),
             this.events.on(Events.ANSWER_SELECTED, (answer) => this.trainer.answer(answer)),
             this.events.on(Events.SCALE_SELECTED, (id) => this.selectScale(id)),
@@ -91,7 +92,11 @@ export default class FretMasterApp {
             this.trainer.stop();
         }
 
-        this.exercise = new ScaleIntervalExercise(scale);
+        this.exercise = new ScaleIntervalExercise(scale, {
+            patternColumns: this.config.trainer.patternColumns,
+            patternPeriod: this.config.trainer.patternPeriod,
+            randomStart: this.settings.get("randomStartPerRound")
+        });
         this.trainer.setExercise(this.exercise);
 
         this.events.emit(Events.EXERCISE_CHANGED, {
@@ -100,6 +105,12 @@ export default class FretMasterApp {
         });
 
         await this.settings.set("activeScaleId", scale.id);
+    }
+
+    async setRandomStart(enabled) {
+        const value = Boolean(enabled);
+        await this.settings.set("randomStartPerRound", value);
+        this.exercise?.setRandomStart(value);
     }
 
     async createScale({ sourceId, name }) {

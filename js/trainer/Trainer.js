@@ -20,6 +20,9 @@ export default class Trainer {
         }
 
         this.reset();
+        const roundLayout = this.exercise.prepareRound();
+        this.roundPattern = roundLayout.pattern;
+        this.roundOffset = roundLayout.offset;
         this.status = "running";
         this.startedAt = performance.now();
 
@@ -94,6 +97,8 @@ export default class Trainer {
         this.summary = null;
         this.startedAt = null;
         this.finishedAt = null;
+        this.roundPattern = null;
+        this.roundOffset = 0;
     }
 
     getState() {
@@ -105,7 +110,11 @@ export default class Trainer {
             questionsPerRound: this.questionsPerRound,
             currentQuestion: this.currentQuestion,
             summary: this.summary,
-            results: [...this.results]
+            results: [...this.results],
+            roundPattern: this.roundPattern
+                ? structuredClone(this.roundPattern)
+                : null,
+            roundOffset: this.roundOffset
         };
     }
 }

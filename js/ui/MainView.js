@@ -21,6 +21,7 @@ export default class MainView {
     initialize(scales, settings) {
         this.scales = structuredClone(scales);
         this.activeScaleId = settings.activeScaleId;
+        this.randomStartPerRound = settings.randomStartPerRound !== false;
 
         this.rootElement.innerHTML = `
             <main class="app-shell">
@@ -205,6 +206,12 @@ export default class MainView {
             this.rootElement.querySelector("#statisticsTrendChart")
         );
         this.renderScaleControls();
+
+        this.rootElement.querySelector("#randomStartCheckbox").checked =
+            this.randomStartPerRound;
+        this.rootElement.querySelector("#randomStartCheckbox").addEventListener("change", (event) =>
+            this.eventBus.emit(Events.RANDOM_START_CHANGED, event.target.checked)
+        );
 
         this.rootElement.querySelector("#scaleSelect").addEventListener("change", (event) =>
             this.eventBus.emit(Events.SCALE_SELECTED, event.target.value)
@@ -914,6 +921,10 @@ export default class MainView {
     }
 
     renderState(state, updateStatus = true) {
+        if (state.status === "running" && state.roundPattern) {
+            this.fretboard.setPattern(state.roundPattern);
+        }
+
         this.rootElement.querySelector("#score").textContent = state.score;
         this.rootElement.querySelector("#correct").textContent = state.correct;
         this.rootElement.querySelector("#question").textContent =

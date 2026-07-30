@@ -1,14 +1,11 @@
 # Changelog
 
-## 4.0.1 Alpha 1 — Sprint 4.3
+## 4.0.1 Alpha 1 — Sprint 5.0
 
-- Replaced per-question scoring with round-based scoring.
-- Added a base score calculated from accuracy.
-- Added a time factor calculated from the round's average response time.
-- Added smooth interpolation between configured time-factor points.
-- Guaranteed that a faster round scores higher when accuracy is equal.
-- Guaranteed that a more accurate round scores higher when response time is equal.
-- Removed the misleading minimum score for slow individual answers.
-- Removed individual point feedback after each answer.
-- Added base-score and time-factor details to the result screen.
-- Added scoring-version information to newly stored statistics.
+- Added a random cyclic pattern offset for every new round.
+- Added twelve possible starting positions, matching the twelve-semitone period.
+- Shifted pattern groups and interval labels together without adding key names.
+- Reconstructed the sixteen visible columns from the twelve-column cycle.
+- Prevented the same random offset from being selected twice consecutively.
+- Added a persistent “Willekeurige startpositie” setting.
+- Kept fixed-pattern training available by disabling the setting.

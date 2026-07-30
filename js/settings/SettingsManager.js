@@ -7,7 +7,8 @@ export default class SettingsManager {
         this.storageKey = storageKey;
         this.settings = {
             activeScaleId: "blues",
-            questionsPerRound: 30
+            questionsPerRound: 30,
+            randomStartPerRound: true
         };
     }
 

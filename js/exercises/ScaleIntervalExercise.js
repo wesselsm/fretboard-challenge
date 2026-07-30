@@ -2,9 +2,14 @@ import Exercise from "./Exercise.js";
 import Question from "../models/Question.js";
 
 export default class ScaleIntervalExercise extends Exercise {
-    constructor(scale) {
+    constructor(scale, { patternColumns = 16, patternPeriod = 12, randomStart = true } = {}) {
         super();
+        this.patternColumns = patternColumns;
+        this.patternPeriod = patternPeriod;
+        this.randomStart = randomStart;
         this.previousKey = null;
+        this.previousOffset = null;
+        this.roundOffset = 0;
         this.setScale(scale);
     }
 
@@ -14,11 +19,43 @@ export default class ScaleIntervalExercise extends Exercise {
         }
 
         this.scale = structuredClone(scale);
-        this.positions = this.#getPlayablePositions(this.scale.pattern);
+        this.prepareRound(false);
+    }
+
+    setRandomStart(enabled) {
+        this.randomStart = Boolean(enabled);
+    }
+
+    prepareRound(chooseNewOffset = true) {
+        if (chooseNewOffset && this.randomStart) {
+            this.roundOffset = this.#chooseOffset();
+        } else {
+            this.roundOffset = 0;
+        }
+
+        this.roundPattern = this.#createShiftedPattern(
+            this.scale.pattern,
+            this.roundOffset
+        );
+        this.positions = this.#getPlayablePositions(this.roundPattern);
+        this.previousKey = null;
 
         if (this.positions.length === 0) {
             throw new Error("The selected pattern contains no playable positions.");
         }
+
+        return {
+            pattern: this.getPattern(),
+            offset: this.roundOffset
+        };
+    }
+
+    getPattern() {
+        return structuredClone(this.roundPattern);
+    }
+
+    getRoundOffset() {
+        return this.roundOffset;
     }
 
     getTitle() {
@@ -53,14 +90,34 @@ export default class ScaleIntervalExercise extends Exercise {
         });
     }
 
+    #chooseOffset() {
+        if (this.patternPeriod <= 1) return 0;
+
+        let offset;
+        do {
+            offset = Math.floor(Math.random() * this.patternPeriod);
+        } while (offset === this.previousOffset);
+
+        this.previousOffset = offset;
+        return offset;
+    }
+
+    #createShiftedPattern(pattern, offset) {
+        return pattern.map((row) =>
+            Array.from({ length: this.patternColumns }, (_, visibleColumn) => {
+                const sourceColumn =
+                    (visibleColumn + offset) % this.patternPeriod;
+                return row[sourceColumn] ?? "";
+            })
+        );
+    }
+
     #getPlayablePositions(pattern) {
         const positions = [];
 
         pattern.forEach((row, stringIndex) => {
             row.forEach((cellCode, columnIndex) => {
-                if (!cellCode) {
-                    return;
-                }
+                if (!cellCode) return;
 
                 positions.push({
                     stringIndex,
