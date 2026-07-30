@@ -1,4 +1,4 @@
-# Guitar Neck Pilot 1.0.0 Stable
+# Guitar Neck Pilot 1.0.1 Stable
 
 **Pattern & Interval Trainer**  
 *Train patterns. Master the fretboard.*

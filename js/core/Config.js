@@ -1,6 +1,6 @@
 const Config = Object.freeze({
     appName: "Guitar Neck Pilot",
-    version: "1.0.0 Stable",
+    version: "1.0.1 Stable",
     storageNamespace: "fretmaster-studio",
     storageKeys: Object.freeze({
         project: "project",

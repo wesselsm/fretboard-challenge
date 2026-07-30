@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 Stable - 2026-07-30
+
+- Fixed mobile stacking of the sticky interval-answer bar.
+- The fretboard and strings can no longer render over the answer buttons while scrolling.
+- Added safe-area padding for phones with a gesture/navigation inset.
+
 ## 1.0.0 Stable - 2026-07-30
 
 ### Added

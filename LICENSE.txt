@@ -1,5 +1,5 @@
 Guitar Neck Pilot - Proprietary License Notice
-Version 1.0.0 Stable
+Version 1.0.1 Stable
 
 Copyright (c) 2026 Martijn Wessels. All rights reserved.
 

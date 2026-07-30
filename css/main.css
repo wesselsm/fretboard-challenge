@@ -138,10 +138,14 @@ button:disabled{cursor:default;opacity:.48;filter:saturate(.35)}
     .answers{
         position:sticky;
         bottom:0;
+        z-index:30;
+        isolation:isolate;
         grid-template-columns:repeat(var(--answer-count,6),minmax(0,1fr));
         gap:3px;
-        padding:5px 2px;
-        background:rgba(25,27,31,.98)
+        padding:5px 2px max(5px,env(safe-area-inset-bottom));
+        background:rgb(25,27,31);
+        border-top:1px solid var(--border);
+        box-shadow:0 -8px 16px rgba(0,0,0,.45)
     }
     .answers button{
         min-width:0;
@@ -814,7 +818,7 @@ body.wrong .app-shell{
 }
 
 
-/* Guitar Neck Pilot 1.0.0 Stable branding */
+/* Guitar Neck Pilot 1.0.1 Stable branding */
 :root{--brand-gold:#d4a84e;--brand-gold-soft:#efd28a;--brand-charcoal:#171411;--brand-cream:#efe7d4}
 body{background:radial-gradient(circle at 50% 0,#30271f 0,#171411 52%,#0f0d0b 100%)}
 .app-shell{border:1px solid rgba(212,168,78,.24);box-shadow:0 18px 60px rgba(0,0,0,.42)}
